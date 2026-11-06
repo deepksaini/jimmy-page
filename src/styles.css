@@ -1,0 +1,207 @@
+:root {
+  color-scheme: dark;
+  --bg: #141816;
+  --panel: #1d221f;
+  --ink: #ece7dc;
+  --muted: #9aa397;
+  --line: #2c332f;
+  --accent: #e8d7b0;
+  --play: #c4d4c0;
+  --focus: #f0ead8;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root {
+  margin: 0;
+  min-height: 100%;
+  background: radial-gradient(1200px 600px at 10% -10%, #243028, var(--bg));
+  color: var(--ink);
+}
+
+button, input {
+  font: inherit;
+}
+
+button {
+  background: var(--panel);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.45rem 0.9rem;
+  cursor: pointer;
+}
+
+button:hover { border-color: var(--accent); }
+button:focus-visible,
+input:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.primary {
+  background: var(--accent);
+  color: #1a1d19;
+  border-color: var(--accent);
+}
+
+.ghost { background: transparent; }
+.ghost.on { border-color: var(--accent); }
+
+.app {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.25rem;
+}
+
+.top {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1.3fr 1fr;
+  align-items: start;
+}
+
+.eyebrow {
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  color: var(--accent);
+  margin: 0 0 0.35rem;
+  font-family: "Avenir Next", "Segoe UI", sans-serif;
+}
+
+h1, h2, h3 { font-weight: 600; margin: 0 0 0.4rem; }
+h1 { font-size: 2rem; line-height: 1.15; }
+h2 { font-size: 1.1rem; }
+
+.lede, .hint, .bar-role, label {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.transport {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 0.8rem;
+  align-items: center;
+  font-family: "Avenir Next", "Segoe UI", sans-serif;
+  font-size: 0.88rem;
+}
+
+.transport label { display: grid; gap: 0.15rem; }
+.check { display: flex; align-items: center; gap: 0.35rem; }
+
+.fret-wrap, .bar-card, .move, .shape {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 0.9rem;
+}
+
+.fretboard { display: grid; gap: 0.35rem; }
+.string-row { display: grid; grid-template-columns: 1.6rem 1fr; align-items: center; gap: 0.5rem; }
+.string-name {
+  font-family: "Avenir Next", "Segoe UI", sans-serif;
+  color: var(--muted);
+}
+.frets { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.4rem; }
+
+.fret {
+  min-height: 48px;
+  border-radius: 12px;
+  border: 1px dashed var(--line);
+  background: transparent;
+}
+
+.fret.empty { opacity: 0.25; }
+.fret.playable {
+  border-style: solid;
+  display: grid;
+  place-items: center;
+  gap: 0;
+}
+
+.fret .shape {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: #5d6b62;
+  margin-bottom: 2px;
+}
+
+.fret.landing .shape {
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.fret.written { background: #2a332c; }
+.fret.now { box-shadow: inset 0 0 0 2px var(--play); }
+
+.fret-label {
+  font-family: "Avenir Next", "Segoe UI", sans-serif;
+  font-size: 0.85rem;
+}
+.fret-label small { display: block; color: var(--muted); }
+
+.bars {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.7rem;
+  margin: 1rem 0;
+}
+
+.bar-card { text-align: left; border-radius: 18px; padding: 0.8rem; }
+.bar-card.selected { border-color: var(--accent); }
+.bar-card header {
+  display: flex;
+  justify-content: space-between;
+  font-family: "Avenir Next", "Segoe UI", sans-serif;
+}
+
+.slots { display: grid; grid-template-columns: repeat(8, 1fr); gap: 0.2rem; margin: 0.5rem 0; }
+.slot {
+  min-height: 34px;
+  padding: 0;
+  border-radius: 8px;
+  font-family: "Avenir Next", "Segoe UI", sans-serif;
+  font-size: 0.75rem;
+}
+.slot.filled { background: #2f3a33; }
+.slot.chosen { border-color: var(--accent); }
+.slot.now { background: var(--play); color: #182017; }
+
+.tab-line, .tab-block {
+  font-family: "Avenir Next", "Segoe UI", sans-serif;
+  font-size: 0.8rem;
+  color: var(--muted);
+  min-height: 1.2em;
+}
+
+.lower {
+  display: grid;
+  grid-template-columns: 1.4fr 0.8fr;
+  gap: 0.8rem;
+}
+
+.moves { display: grid; gap: 0.7rem; }
+.move {
+  display: grid;
+  gap: 0.6rem;
+}
+.variants, .variant-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.stuck { justify-self: start; }
+
+.shape .chart { width: 100%; height: auto; }
+.shape text { fill: var(--muted); font-size: 11px; font-family: "Avenir Next", "Segoe UI", sans-serif; }
+.tab-block { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+@media (max-width: 840px) {
+  .top, .bars, .lower { grid-template-columns: 1fr; }
+}
