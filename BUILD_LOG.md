@@ -14,3 +14,73 @@ What went wrong: backing through Karplus-Strong sounded thin. Corrected by keepi
 Repeat / Change the rhythm / Answer with preview then apply. Bar 4 snaps the last note to A. Undo stack. Shape view labeled as a simple guide. “I am stuck” drops a curated bar-1 idea. Click a selected filled slot to delete it.
 
 Default if the brief was vague: a move always writes the first empty bar; if every bar is full, it writes the selected bar.
+
+## Stage 4 — guided one-step flow
+The old one-screen layout was too much at once (fretboard, four bar cards, every move). Replaced it with Bar 1 → 4 steps, a horizontal neck (strings as lines, frets as lines), note chips, and a final “Your solo” screen. Music, sound, and scoring were not changed. Ring vs solid is labeled in plain words.
+
+Default: clicking a neck dot appends to bar 1 with the next free 8th note. Moves write the current step’s bar from the previous bar. Bar 4 still forces the last note to A.
+
+## Keyboard
+A, C, D, E, and G play those note names. High (default) is A3–G4; Low is A2–G3. Z selects Low, X selects High. Shift+A is the A one octave above the current set, so A C D E G Shift+A climbs. Dots show only the note name. The line under the neck is “Keys: A C D E G. Shift+A = higher A. Z low, X high.” In step 1 a mapped key also appends to bar 1. Later steps only sound. C on high e fret 8 is click-only. Backspace, Space, the four-note cap, ignored repeats/modifiers/inputs, and AudioContext resume are unchanged.
+
+## Idea length
+Bar 1 now stops at four notes. A fifth click or key does not add anything and shows “Four notes is plenty for an idea. Press Backspace to change one.” Repeat copies every note and slot. Change-rhythm, answer, and shift keep the same note count, so bars 2–4 stay as long as the idea. Rhythm patterns used to keep only as many notes as they had onsets, which is why later bars looked shorter.
+
+## Labels and later-bar choices
+Note names on the neck are the large labels. Keyboard letters sit in small dim keycaps (A C D E G, and A+ for Shift+A), with a Show keys toggle (on in step 1, off later). The legend spells out “Small keycap = the key to press.” Bars 2–4 no longer show the neck. Each of those steps is one choice list and one “Put it in bar N” button. Bar 2’s list is “Say it again”: the exact repeat plus the four rhythms. Keyboard audition still plays notes on those steps.
+
+## Bar 2–4 ringing
+Previews on later bars had no chord under them and did not light the chips, so the notes felt dead. A one-bar preview now uses that bar’s backing (F, G, or Am), Karplus notes hold a little longer, and the chips flash as the phrase plays. Ring vs solid still shows on the chips after the neck is hidden.
+
+## Three-string box
+The neck is only G, B, and high e at frets 5–8: C4 D4 E4 G4 A4 C5. Keys C D E G A play those pitches (and add them in step 1); Shift+C is C5. No Low/High switch. Moves clamp to these six notes. Landings in this set are Am: C E A (and high C), F: A C, G: G D. Bar 4 always ends on A4. Tab is three lines, e/B/G.
+
+## Rhythm
+Notes now occupy real 8th-note lengths and fade without a click; a rest after a note stops it cleanly. Bar 2’s “Say it again” choices have audible long and short notes. Bar 3 picks a rhythm different from bars 1 and 2 and always leaves a gap. Bar 4 runs up (1, 1, 2) and holds A4 for four 8ths. “Leave space” (bars 2 and 3) turns one chosen note into a rest. The first note of each bar is a little louder. An 8-block strip under each bar shows the rhythm, and tension follows density, rests, and the long final hold.
+
+## Practice tool — Stage 1 (feedback, rounds, library)
+Create now sits in a five-section nav: Create, Practice, Improvise, Echo, Progress. Only Create is live. After four bars, Check names whether each bar ends on a home note (Am: A C E, F: A C, G: G D) and how many notes on beats 1 and 3 are home notes, in plain sentences. Round 1 still uses moves. Round 2 keeps the ring dots but you write every bar. Round 3 hides the rings. Saved phrases go to localStorage (`pbp-phrases`) with a name, Load, and Delete.
+
+What went wrong: the first pass added helpers but left the old “Your solo” screen in place, so Check and the library never showed. Corrected by swapping that screen and routing rounds 2–3 through the fretboard. Keys still ignore repeats, Backspace undoes on hand-built bars, Space plays or stops.
+
+Default: beats 1 and 3 are eighth-note slots 0 and 4. A high C counts as C. Round 2 and 3 do not force bar 4 onto A; Check still tells you if you landed on a home note.
+
+## Lessons
+Replaced the Check sentences with seven always-open lesson cards. Each card is a rule, one line from the current phrase, a status chip, and a Hear it A/B when that lesson has a contrast (home-note swap, last note vs A, two matching bars, even rhythm vs chosen rhythm). Hear it plays copies only. Cards sit under the four bars in Create, under a report stub in Improvise, and in a Lessons tab with an example and a use count. After each round: “Lessons used: X of 7.” After round 3 it also compares with round 1.
+
+Tests in `scripts/check-music.js`: for each lesson, one phrase that uses it and one that does not. Also a mutation check that Hear it copies do not edit the saved bars.
+
+What went wrong: a rest at the end of a bar is just unused time, so “silence” would have been true for almost every phrase. Corrected by counting only a hole before or between notes. Default: a scale run is three or more notes that walk one step on C D E G A C, counted across the whole phrase; “used” means at most one run. “Finished” means bar 4 ends on A. Repeat matches steps, including a transposition. Rhythm matches the same notes with different start times or lengths.
+
+## Polish — Create and Lessons only
+Nav is Create and Lessons. Practice, Echo, Progress, and Improvise are hidden; no “comes later” copy. “Home note” is now “chord note” in the UI, lessons, legend, and tests. Each bar step has a large badge such as “Bar 1: A minor chord (A, C, E)” above the neck, and the bar tabs read “Bar 1 · Am”. Create opens with a How this works strip. Lesson 1 is tagged Fact; the rest are Common guideline. The Lessons tab starts with “Guidelines are habits many players use. Trust your ears.” Play buttons sit next to “Click the page once to turn on sound.” Page title is Jimmy Page. `npm run check` and `npm run build` pass.
+
+## Spread and rhythm clicks
+“Spread them out” places the bar’s notes on slots 0, 2, 4, 6 (one every two blocks). Clicking a filled block in the rhythm strip grows that note by one eighth if the next slot is free; if it cannot grow, it snaps back to one block. Undo still covers both.
+
+## Course Learn — Stage 1
+COURSE.md is the source of truth. The Lessons tab is now Learn: a list of Lessons 1, 3, 4, and 5 with Done / Not done in localStorage (`pbp-learn`). Each lesson is one page with Learn, Hear it, Try it, Check, Remember, and Fact / Common guideline chips, using the course copy and `Note@slot×length` examples. Chord-only backing playback is on the engine. Lesson 1 is a three-question quiz; Lesson 3 is pick-the-chord-notes; Lesson 4 is a four-bar chord-note ending; Lesson 5 is bar 4 land-on-A plus a passing note. Create is unchanged. Lessons 2, 6–8, the final challenge, and What comes next are hidden until later stages.
+
+What went wrong: Learn was drafted before it was wired into the nav, and Hear it needed a chord-only `playBacking` path. Corrected by swapping the tab to Learn and adding backing-only playback. Default: unfinished lessons are omitted from the list, not shown as “comes later.”
+
+## Guided course — Stage A
+The app now opens on a Course home (title, goal, who it is for, “N of 4 done”, Continue). Lessons 1, 3, 4 and 5 play in a one-step-at-a-time player (Learn, Hear it, Try it, Check, Recap) with Back/Next, a desktop sidebar, and a phone dropdown. The next lesson unlocks when Check passes. After three failed checks, “Show me the answer and continue” is offered. Create is renamed Free practice and stays always available. Progress and the current step save in `pbp-learn`. Music, keys, and checks are unchanged.
+
+Default: this stage’s catalog is four lessons, so the header reads “Lesson X of 4”. Lessons 2, 6–8, the final challenge, and What comes next wait for Stages B and C.
+
+## Theory course — Stage A
+Switched guitar sound from Karplus-Strong to the acoustic samples in `public/samples/guitar-samples/` via Tone.js Sampler. Chords/opens can strum low to high at 18 ms. The course fretboard is 6 strings, frets 0–12, with note names / scale numbers / blank. Course home lists all 10 modules; only Module 1 is playable. Each concept uses Diagnose → Explain → Verify → Continue from THEORY_COURSE.md, with Not sure follow-ups, Why? after a correct verify, three-miss “Show me and continue”, and localStorage `pbp-theory`. Free practice is unchanged (3-string box). About quotes the sample credit line.
+
+Modules 2–8, Module 9 (COURSE.md), Module 10, and the learning report wait for Stages B and C. Coming-next modules are labeled, not invented.
+
+## Theory course — Stage 1 (responsive + Modules 2–4)
+Copied the updated THEORY_COURSE.md (Modules 1–8). Modules 2–4 are playable with the same Diagnose / Explain / Verify / Continue player as Module 1. Strummed chords use the voicings table. Ending a module or Stop for now opens the five-heading learning report (or “Not enough answers yet to judge this.”). CSS: text wraps, full-width option buttons, `min-width: 0` on flex/grid text children, fretboard in its own horizontal scroll, side padding ≥16px. Tested 375 / 768 / 1280: question 1.1 wraps, no page overflow, fretboard scrolls only on small widths.
+
+`npm run check` and `npm run build` passed.
+
+Stage 2 (Modules 5–8) and Stage 3 (Module 9, Module 10, remove Free practice) are not started.
+
+## Theory course — Modules 5–10
+Modules 5–8 use the Diagnose / Explain / Verify / Continue player and the THEORY_COURSE.md copy (keys, minor, rhythm, pentatonic/box 1/blue note). Module 9 is COURSE.md Lessons 4–8 plus the final challenge, with the four-bar builder inside Try it. Module 10 is the roadmap page. Free practice is removed from the nav.
+
+`npm run check` and `npm run build` passed.

@@ -1,6 +1,12 @@
-import { CHORDS, midiOf, SLOTS_PER_BAR } from './music.js'
+import * as Tone from 'tone'
+import { acousticUrls, midiOf, noteWithOctave, STRUM_GAP } from './notes.js'
+import { CHORDS, eventsInOrder, SLOTS_PER_BAR } from './music.js'
+import { chordNotes } from './voicings.js'
 
-const cache = new Map()
+function resolvePositions(step) {
+  if (step.chord) return chordNotes(step.chord)
+  return step.positions || []
+}
 
 function midiToFreq(midi) {
   return 440 * 2 ** ((midi - 69) / 12)
@@ -14,29 +20,6 @@ function fadeEdges(data, sampleRate) {
     const idx = data.length - 1 - i
     if (idx >= 0) data[idx] *= i / fadeOut
   }
-}
-
-export function renderKarplus(ctx, freq, seconds) {
-  const key = `${ctx.sampleRate}|${freq.toFixed(2)}|${seconds.toFixed(2)}`
-  if (cache.has(key)) return cache.get(key)
-  const n = Math.max(2, Math.round(ctx.sampleRate / freq))
-  const length = Math.max(n + 8, Math.floor(ctx.sampleRate * seconds))
-  const buffer = ctx.createBuffer(1, length, ctx.sampleRate)
-  const data = buffer.getChannelData(0)
-  const delay = new Float32Array(n)
-  for (let i = 0; i < n; i += 1) delay[i] = Math.random() * 2 - 1
-  let ptr = 0
-  let prev = 0
-  for (let i = 0; i < length; i += 1) {
-    const averaged = 0.5 * (delay[ptr] + prev)
-    prev = delay[ptr]
-    delay[ptr] = averaged * 0.996
-    data[i] = averaged
-    ptr = (ptr + 1) % n
-  }
-  fadeEdges(data, ctx.sampleRate)
-  cache.set(key, buffer)
-  return buffer
 }
 
 function playBuffer(ctx, buffer, time, gainValue, dest, playing) {
@@ -93,8 +76,22 @@ export function createEngine() {
   let master = null
   let playing = []
   let hat = null
+  let sampler = null
+  let timers = []
+
+  function clearTimers() {
+    for (const id of timers) window.clearTimeout(id)
+    timers = []
+  }
+
+  function later(fn, ms) {
+    const id = window.setTimeout(fn, Math.max(0, ms))
+    timers.push(id)
+    return id
+  }
 
   async function ensure() {
+    await Tone.start()
     if (!ctx) {
       ctx = new AudioContext()
       master = ctx.createGain()
@@ -103,10 +100,22 @@ export function createEngine() {
       hat = hatBuffer(ctx)
     }
     if (ctx.state === 'suspended') await ctx.resume()
+    if (!sampler) {
+      sampler = new Tone.Sampler({
+        urls: acousticUrls(),
+        baseUrl: '/samples/guitar-samples/acoustic/',
+        attack: 0.004,
+        release: 0.7,
+      }).toDestination()
+      sampler.volume.value = -8
+      await Tone.loaded()
+    }
     return ctx
   }
 
   function stop() {
+    clearTimers()
+    if (sampler) sampler.releaseAll()
     for (const node of playing) {
       try {
         node.stop()
@@ -117,16 +126,22 @@ export function createEngine() {
     playing.length = 0
   }
 
-  function scheduleBacking(audio, start, bpm, swing, bars = 4, loops = 1) {
+  function triggerNote(string, fret, duration = 0.85, when = undefined, velocity = 0.78) {
+    if (!sampler) return
+    const note = noteWithOctave(midiOf(string, fret))
+    sampler.triggerAttackRelease(note, duration, when ?? Tone.now(), velocity)
+  }
+
+  function scheduleBacking(audio, start, bpm, swing, barCount = 4, loops = 1, startBar = 0) {
     const beat = 60 / bpm
     const eighth = beat / 2
     const dest = audio.createGain()
     dest.gain.value = 1
     dest.connect(master)
     for (let loop = 0; loop < loops; loop += 1) {
-      for (let bar = 0; bar < bars; bar += 1) {
-        const chord = CHORDS[bar]
-        const barStart = start + (loop * bars + bar) * 8 * eighth
+      for (let bar = 0; bar < barCount; bar += 1) {
+        const chord = CHORDS[(startBar + bar) % CHORDS.length]
+        const barStart = start + (loop * barCount + bar) * 8 * eighth
         playTone(audio, midiToFreq(ROOT_MIDI[chord]), barStart, beat * 1.5, 0.16, dest, playing)
         for (const midi of PAD_MIDI[chord]) {
           playTone(audio, midiToFreq(midi), barStart + 0.02, beat * 3.2, 0.035, dest, playing)
@@ -140,50 +155,187 @@ export function createEngine() {
     }
   }
 
-  function schedulePhrase(audio, start, bpm, swing, bars, onSlot) {
-    const beat = 60 / bpm
-    const eighth = beat / 2
+  function schedulePhrase(bpm, swing, bars, onSlot, startAt) {
+    const eighth = 60 / bpm / 2
+    const t0 = startAt ?? Tone.now() + 0.05
     bars.forEach((events, bar) => {
-      events.forEach((event) => {
+      const ordered = eventsInOrder(events)
+      ordered.forEach((event, index) => {
         const swingAdd = event.startSlot % 2 === 1 ? eighth * swing * 0.35 : 0
-        const jitter = (Math.random() * 0.02 - 0.01)
-        const t = start + (bar * SLOTS_PER_BAR + event.startSlot) * eighth + swingAdd + jitter
-        const freq = midiToFreq(midiOf(event.string, event.fret))
-        const seconds = Math.max(0.18, event.lengthSlots * eighth + 0.12)
-        const buf = renderKarplus(audio, freq, seconds)
-        const vel = 0.28 + Math.random() * 0.1
-        playBuffer(audio, buf, Math.max(audio.currentTime, t), vel, master, playing)
+        const t = t0 + (bar * SLOTS_PER_BAR + event.startSlot) * eighth + swingAdd
+        const next = ordered[index + 1]
+        const endSlot = event.startSlot + event.lengthSlots
+        const followedByRest = !next || next.startSlot > endSlot
+        const lastOfPiece = bar === bars.length - 1 && index === ordered.length - 1
+        const ring = event.lengthSlots * eighth + (lastOfPiece ? 0.14 : 0)
+        const tail = lastOfPiece ? 0.2 : followedByRest ? 0.038 : 0.02
+        const seconds = Math.max(0.12, ring + tail)
+        const vel = (index === 0 ? 0.92 : 0.76)
+        triggerNote(event.string, event.fret, seconds, t, vel)
         if (onSlot) {
-          const wait = Math.max(0, t - audio.currentTime)
-          window.setTimeout(() => onSlot(bar, event), wait * 1000)
+          later(() => onSlot(bar, event), (t - Tone.now()) * 1000)
         }
       })
     })
   }
 
   return {
-    async preview(events, bpm, swing) {
+    async preview(events, bpm, swing, onSlot, onDone, barIndex = 0) {
       const audio = await ensure()
       stop()
       const start = audio.currentTime + 0.05
-      schedulePhrase(audio, start, bpm, swing, [events], null)
+      scheduleBacking(audio, start, bpm, swing, 1, 1, barIndex)
+      schedulePhrase(bpm, swing, [events], (_bar, event) => onSlot?.(barIndex, event))
+      const total = SLOTS_PER_BAR * (60 / bpm / 2)
+      later(() => onDone?.(), total * 1000 + 80)
     },
-    async play(bars, bpm, swing, loop, onSlot, onDone) {
+    async playSequence(parts, bpm, swing, onSlot, onDone) {
+      const audio = await ensure()
+      stop()
+      const start = audio.currentTime + 0.05
+      const eighth = 60 / bpm / 2
+      const t0 = Tone.now() + 0.05
+      parts.forEach((part, index) => {
+        const t = start + index * SLOTS_PER_BAR * eighth
+        scheduleBacking(audio, t, bpm, swing, 1, 1, part.barIndex)
+        schedulePhrase(bpm, swing, [part.events], (_bar, event) => onSlot?.(part.barIndex, event), t0 + index * SLOTS_PER_BAR * eighth)
+      })
+      later(() => onDone?.(), parts.length * SLOTS_PER_BAR * eighth * 1000 + 80)
+    },
+    async playBacking(bpm, swing, { bars = 4, startBar = 0, loops = 1, onBar, onDone } = {}) {
+      const audio = await ensure()
+      stop()
+      const start = audio.currentTime + 0.05
+      scheduleBacking(audio, start, bpm, swing, bars, loops, startBar)
+      const eighth = 60 / bpm / 2
+      const barDur = SLOTS_PER_BAR * eighth
+      for (let i = 0; i < loops * bars; i += 1) {
+        const bar = (startBar + i) % CHORDS.length
+        later(() => onBar?.(bar, i), i * barDur * 1000)
+      }
+      later(() => onDone?.(), loops * bars * barDur * 1000 + 80)
+    },
+    async play(bars, bpm, swing, loop, onSlot, onDone, onBar) {
       const audio = await ensure()
       stop()
       const start = audio.currentTime + 0.06
       const loops = loop ? 8 : 1
+      const eighth = 60 / bpm / 2
+      const barDur = 8 * eighth
+      const t0 = Tone.now() + 0.06
       scheduleBacking(audio, start, bpm, swing, 4, loops)
       for (let i = 0; i < loops; i += 1) {
-        const t = start + i * 4 * 8 * (60 / bpm / 2)
-        schedulePhrase(audio, t, bpm, swing, bars, i === 0 ? onSlot : null)
+        schedulePhrase(bpm, swing, bars, i === 0 ? onSlot : null, t0 + i * 4 * barDur)
       }
-      const total = loops * 4 * 8 * (60 / bpm / 2)
-      window.setTimeout(() => onDone?.(), total * 1000 + 80)
+      for (let i = 0; i < loops * 4; i += 1) {
+        later(() => onBar?.(i % 4, i), i * barDur * 1000)
+      }
+      later(() => onDone?.(), loops * 4 * barDur * 1000 + 80)
+    },
+    async playSlotStrums(bars, { bpm = 80, onNote, onDone } = {}) {
+      await ensure()
+      stop()
+      const eighth = 60 / bpm / 2
+      const t0 = Tone.now() + 0.05
+      let last = t0
+      bars.forEach((bar, barIndex) => {
+        const list = [...resolvePositions(bar)]
+        list.sort((a, b) => b.string - a.string)
+        ;(bar.slots || []).forEach((slot) => {
+          const t = t0 + (barIndex * 8 + slot) * eighth
+          list.forEach((pos, index) => {
+            const when = t + index * STRUM_GAP
+            triggerNote(pos.string, pos.fret, 0.55, when)
+            later(() => onNote?.(pos, index), (when - Tone.now()) * 1000)
+            last = Math.max(last, when + 0.55)
+          })
+        })
+      })
+      later(() => onDone?.(), (last - Tone.now()) * 1000 + 80)
+    },
+    async playClicksThenStrums({ bpm = 80, clickBars = 2, strumBars = 2, chord = 'Am', onNote, onDone } = {}) {
+      const audio = await ensure()
+      stop()
+      const beat = 60 / bpm
+      const start = audio.currentTime + 0.05
+      for (let i = 0; i < clickBars * 4; i += 1) {
+        const t = start + i * beat
+        playBuffer(audio, hat, t, i % 4 === 0 ? 0.14 : 0.045, master, playing)
+      }
+      const strumAt = Tone.now() + clickBars * 4 * beat + 0.08
+      const list = [...resolvePositions({ chord })]
+      list.sort((a, b) => b.string - a.string)
+      for (let i = 0; i < strumBars * 4; i += 1) {
+        const t = strumAt + i * beat
+        list.forEach((pos, index) => {
+          const when = t + index * STRUM_GAP
+          triggerNote(pos.string, pos.fret, 0.55, when)
+          later(() => onNote?.(pos, index), (when - Tone.now()) * 1000)
+        })
+      }
+      later(() => onDone?.(), (clickBars + strumBars) * 4 * beat * 1000 + 120)
+    },
+    async playScript(steps, { onNote, onDone } = {}) {
+      await ensure()
+      stop()
+      let t = Tone.now() + 0.04
+      let last = t
+      steps.forEach((step) => {
+        const list = [...resolvePositions(step)]
+        if (step.mode === 'strum') list.sort((a, b) => b.string - a.string)
+        const gap = step.gap ?? 0.22
+        const hold = step.hold ?? 0.7
+        list.forEach((pos, index) => {
+          const when =
+            step.mode === 'together'
+              ? t
+              : step.mode === 'strum'
+                ? t + index * STRUM_GAP
+                : t + index * gap
+          triggerNote(pos.string, pos.fret, hold, when)
+          later(() => onNote?.(pos, index), (when - Tone.now()) * 1000)
+          last = Math.max(last, when + hold)
+        })
+        t = last + (step.pause ?? 0.22)
+      })
+      later(() => onDone?.(), (t - Tone.now()) * 1000 + 40)
+    },
+    async playPositions(positions, { mode = 'seq', gap = 0.22, hold = 0.7, onNote, onDone } = {}) {
+      await ensure()
+      stop()
+      const now = Tone.now() + 0.04
+      const list = [...positions]
+      if (mode === 'strum') {
+        list.sort((a, b) => b.string - a.string)
+      }
+      list.forEach((pos, index) => {
+        const t =
+          mode === 'together'
+            ? now
+            : mode === 'strum'
+              ? now + index * STRUM_GAP
+              : now + index * gap
+        triggerNote(pos.string, pos.fret, hold, t)
+        later(() => onNote?.(pos, index), (t - Tone.now()) * 1000)
+      })
+      const last =
+        mode === 'together'
+          ? hold
+          : mode === 'strum'
+            ? list.length * STRUM_GAP + hold
+            : list.length * gap + 0.1
+      later(() => onDone?.(), last * 1000 + 60)
     },
     stop,
     async unlock() {
       await ensure()
+    },
+    async pluck(string, fret) {
+      await ensure()
+      triggerNote(string, fret, 0.9, Tone.now(), 0.82)
+    },
+    loaded() {
+      return !!sampler
     },
   }
 }

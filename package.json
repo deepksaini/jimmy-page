@@ -1,5 +1,5 @@
 {
-  "name": "phrase-by-phrase",
+  "name": "jimmy-page",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "react": "^19.3.1",
-    "react-dom": "^19.3.1"
+    "react-dom": "^19.3.1",
+    "tone": "^15.1.22"
   },
   "devDependencies": {
     "@types/react": "^19.3.0",
