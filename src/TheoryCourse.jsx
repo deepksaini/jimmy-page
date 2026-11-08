@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { KindChips } from './board.jsx'
+import { HomeBack, KindChips } from './board.jsx'
 import { FullFretboard, LabelModeSwitch } from './FullFretboard.jsx'
 import {
   allConcepts,
@@ -151,16 +151,12 @@ function LearningReport({ mod, state, engine, onHome, onContinue }) {
   const following = nextModule(mod)
   return (
     <section className="panel learn-page report-page">
-      <button
-        type="button"
-        className="ghost"
+      <HomeBack
         onClick={() => {
           engine.stop()
           onHome()
         }}
-      >
-        Course home
-      </button>
+      />
       <h1>Learning report</h1>
       <p className="lede">{report.title}</p>
       {report.early ? (
@@ -220,9 +216,7 @@ function LearningReport({ mod, state, engine, onHome, onContinue }) {
             Next module
           </button>
         ) : null}
-        <button type="button" onClick={onHome}>
-          Course home
-        </button>
+        <HomeBack onClick={onHome} />
       </div>
     </section>
   )
@@ -348,17 +342,13 @@ function ConceptPlayer({ concept, engine, state, onState, onHome, onReport }) {
 
   return (
     <section className="panel learn-page">
-      <button
-        type="button"
-        className="ghost"
+      <HomeBack
         onClick={() => {
           engine.stop()
           persist({ view: 'home' })
           onHome()
         }}
-      >
-        Course home
-      </button>
+      />
       <KindChips chips={concept.chips} />
       <h1>
         {concept.id} {concept.name}
@@ -494,16 +484,12 @@ function RoadmapPage({ engine, onHome }) {
   const mod = MODULES.find((item) => item.id === 'm10')
   return (
     <section className="panel learn-page">
-      <button
-        type="button"
-        className="ghost"
+      <HomeBack
         onClick={() => {
           engine.stop()
           onHome()
         }}
-      >
-        Course home
-      </button>
+      />
       <h1>
         Module {mod.number}: {mod.title}
       </h1>
@@ -623,25 +609,25 @@ export default function TheoryCourse({ engine, learnKey }) {
       <ul className="course-toc">
         {MODULES.map((mod) => (
           <li key={mod.id}>
-            <div className="toc-item">
-              {mod.kind === 'improv' || mod.status === 'roadmap' ? (
-                <button type="button" className="learn-item" onClick={() => openModule(mod)}>
-                  <span className="toc-copy">
-                    <span className="toc-title">
-                      Module {mod.number}: {mod.title}
-                    </span>
-                    <span className="toc-meta">{mod.status === 'roadmap' ? 'Roadmap' : 'Ready'}</span>
+            {mod.kind === 'improv' || mod.status === 'roadmap' ? (
+              <button type="button" className="toc-item toc-module" onClick={() => openModule(mod)}>
+                <span className="toc-copy">
+                  <span className="toc-title">
+                    Module {mod.number}: {mod.title}
                   </span>
-                </button>
-              ) : (
+                  <span className="toc-meta">{mod.status === 'roadmap' ? 'Roadmap' : 'Ready'}</span>
+                </span>
+              </button>
+            ) : (
+              <div className="toc-item toc-module">
                 <span className="toc-copy">
                   <span className="toc-title">
                     Module {mod.number}: {mod.title}
                   </span>
                   <span className="toc-meta">{mod.status === 'full' ? 'Ready' : 'Coming next'}</span>
                 </span>
-              )}
-            </div>
+              </div>
+            )}
             {mod.concepts ? (
               <ul className="concept-list">
                 {mod.concepts.map((concept) => {
@@ -671,7 +657,7 @@ export default function TheoryCourse({ engine, learnKey }) {
         ))}
       </ul>
       <div className="about">
-        <h2>About</h2>
+        <h2>About / Credits</h2>
         <p className="lesson-evidence">{SAMPLE_CREDIT}</p>
       </div>
     </section>

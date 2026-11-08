@@ -385,5 +385,4 @@ export const MODULE_1 = {
 export const COURSE_GOAL =
   'Go from "I know a few chords" to understanding why notes and chords work, and using that to improvise your own phrases.'
 
-export const COURSE_FOR =
-  'Who it\'s for: someone who can play a few songs on guitar but knows almost no theory, only that there are 7 note letters and some sharps and flats.'
+export const COURSE_FOR = 'Someone who can play a few songs on guitar but knows almost no theory.'

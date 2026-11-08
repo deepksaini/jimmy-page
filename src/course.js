@@ -5,119 +5,13 @@ export const COURSE_TITLE = 'Jimmy Page'
 export const COURSE_GOAL =
   "By the end you'll know which notes fit each chord, and how to turn one small idea into four bars."
 
-export const COURSE_FOR =
-  'Who it is for: a guitarist who knows the A minor pentatonic box but mostly runs up and down it when trying to improvise.'
-
-export const STAGE_A_IDS = ['l1', 'l3', 'l4', 'l5']
-export const STAGE1_IDS = STAGE_A_IDS
+export const COURSE_FOR = 'Someone who can play a few songs on guitar but knows almost no theory.'
 
 export const LESSONS = [
   {
-    id: 'l1',
-    number: 1,
-    title: 'Key, scale and chord',
-    chips: ['Fact'],
-    learn: [
-      'Three words get mixed up, so here they are side by side.',
-      'Key: the home of the whole song. In A minor, everything feels like it wants to come back to A. The key stays the same.',
-      'Scale: the set of notes you play from. The A minor pentatonic is A, C, D, E, G. It also stays the same.',
-      'Chord: a few notes the backing plays together. It changes, usually every bar. Here: A minor, then F, then G, then A minor.',
-      'You play notes from the scale. The backing plays the chords. The key is the home they share.',
-    ],
-    hear: [
-      { label: 'The A minor chord on its own for one bar.', kind: 'chord', barIndex: 0 },
-      {
-        label: 'Your five notes, one after another, over the A minor chord.',
-        kind: 'phrase',
-        barIndex: 0,
-        phrase: 'C4@0×1, D4@1×1, E4@2×1, G4@3×1, A4@4×1, C5@5×3',
-      },
-      {
-        label: 'All four chords in a row (A minor, F, G, A minor), so the change from bar to bar is audible.',
-        kind: 'chords',
-        bars: 4,
-        startBar: 0,
-      },
-    ],
-    try: {
-      kind: 'loop-listen',
-      text: 'Press Play. While the four chords loop, click or press any of your notes. Listen for the moment each new chord starts.',
-    },
-    quiz: [
-      {
-        prompt: 'The backing plays something new every bar. Is that the key, the scale or the chord?',
-        options: ['the key', 'the scale', 'the chord'],
-        answer: 'the chord',
-        why: 'The chord is what the backing plays, and it changes every bar. The key stays A minor the whole time.',
-      },
-      {
-        prompt: 'The five notes you play from are the key, the scale or the chord?',
-        options: ['the key', 'the scale', 'the chord'],
-        answer: 'the scale',
-        why: 'The scale is the set of notes you play from: A, C, D, E, G. It does not change with the bar.',
-      },
-      {
-        prompt: 'In A minor, which note feels like home?',
-        options: ['A', 'C', 'E', 'G'],
-        answer: 'A',
-        why: 'A is the home of the key of A minor. Everything wants to come back to it.',
-      },
-    ],
-    remember: 'The key and the scale stay. The chord changes.',
-  },
-  {
-    id: 'l3',
-    number: 3,
-    title: 'How chords are built',
-    chips: ['Fact'],
-    learn: [
-      'A basic chord is three notes. To build one, start on a note of the A minor scale (A, B, C, D, E, F, G) and take every other note.',
-      'Start on A: A, C, E = A minor',
-      'Start on F: F, A, C = F',
-      'Start on G: G, B, D = G',
-      'Minor or major comes from the gap between the first two notes. On one string, count frets:',
-      'A to C is 3 frets. A 3-fret gap makes a minor chord.',
-      'F to A is 4 frets, and G to B is 4 frets. A 4-fret gap makes a major chord.',
-      'In the key of A minor, musicians number the chords by where they start in the scale: A minor is i (lowercase = minor), F is VI, G is VII (uppercase = major). The backing in this app is i, VI, VII, i.',
-    ],
-    hear: [
-      { label: 'A minor chord on its own for one bar.', kind: 'chord', barIndex: 0 },
-      { label: 'F chord on its own for one bar.', kind: 'chord', barIndex: 1 },
-      { label: 'G chord on its own for one bar.', kind: 'chord', barIndex: 2 },
-      {
-        label: "A minor's notes one at a time, from your box.",
-        kind: 'phrase',
-        barIndex: 0,
-        phrase: 'E4@0×2, A4@2×2, C5@4×4',
-      },
-      {
-        label: "F's notes one at a time, from your box.",
-        kind: 'phrase',
-        barIndex: 1,
-        phrase: 'C4@0×2, A4@2×2, C5@4×4',
-      },
-      {
-        label: "G's notes one at a time, from your box.",
-        kind: 'phrase',
-        barIndex: 2,
-        phrase: 'D4@0×4, G4@4×4',
-      },
-    ],
-    try: {
-      kind: 'pick-chord-notes',
-      text: 'For each chord, click every note in your box that belongs to it, then press Done.',
-      targets: [
-        { chord: 'Am', names: ['A', 'C', 'E'] },
-        { chord: 'F', names: ['A', 'C'] },
-        { chord: 'G', names: ['G', 'D'] },
-      ],
-    },
-    remember: "A chord is every other note of the scale. F and G each have one note you don't have in your five.",
-  },
-  {
     id: 'l4',
-    number: 4,
-    title: 'Chord notes are the notes that fit right now',
+    number: '9.1',
+    title: 'Chord notes',
     chips: ['Fact', 'Common guideline'],
     learn: [
       'Your five notes never change. What changes, bar by bar, is which of them are in the chord playing right now. Those are chord notes. They sound settled. The other notes of the scale are still safe to play, but they sound like they want to move.',
@@ -136,7 +30,7 @@ export const LESSONS = [
   },
   {
     id: 'l5',
-    number: 5,
+    number: '9.2',
     title: 'Passing notes and landing',
     chips: ['Common guideline'],
     learn: [
@@ -168,7 +62,7 @@ export const LESSONS = [
   },
   {
     id: 'l6',
-    number: 6,
+    number: '9.3',
     title: 'One idea, four bars',
     chips: ['Common guideline'],
     learn: [
@@ -209,7 +103,7 @@ export const LESSONS = [
   },
   {
     id: 'l7',
-    number: 7,
+    number: '9.4',
     title: 'Rhythm and space',
     chips: ['Common guideline'],
     learn: [
@@ -232,8 +126,8 @@ export const LESSONS = [
   },
   {
     id: 'l8',
-    number: 8,
-    title: 'The blue note',
+    number: '9.5',
+    title: 'The blue note in a phrase',
     chips: ['Common guideline'],
     learn: [
       'Add one note to your five: E♭ (E flat). It sits between D and E. Its job number is ♭5 (flat fifth), and it gives that bluesy, tense sound heard in a lot of rock and blues.',
@@ -252,8 +146,8 @@ export const LESSONS = [
   },
   {
     id: 'lfinal',
-    number: 9,
-    title: 'Your own four bars, no help',
+    number: '9.6',
+    title: 'Final challenge',
     chips: [],
     learn: [
       "No rings, no moves, no hints. Use everything from the lessons. The goals are shown before you start, so you know what you're aiming for.",

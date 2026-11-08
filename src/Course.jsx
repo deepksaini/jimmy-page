@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
-import { KindChips } from './board.jsx'
+import { HomeBack, KindChips } from './board.jsx'
 import { COURSE_GOAL, LESSONS, lessonById, phraseEvents } from './course.js'
-import { MODULE_9_IDS } from './theory/module9.js'
+import { MODULE_9_IDS, MODULE_9_INTRO } from './theory/module9.js'
+import { SAMPLE_CREDIT } from './notes.js'
 import {
   catalog,
   continueTarget,
@@ -56,6 +57,10 @@ function PlayIcon() {
   )
 }
 
+function lessonHeading(item) {
+  return `${item.number} ${item.title}`
+}
+
 function statusLabel(status) {
   if (status === 'done') return 'Done'
   if (status === 'locked') return 'Locked'
@@ -106,7 +111,7 @@ function LessonList({ sequence, progress, openId, onOpen, variant }) {
               </span>
               <span className="toc-copy">
                 <span className="toc-title">
-                  {item.id === 'lfinal' ? 'Final challenge' : `Lesson ${item.number}`}: {item.title}
+                  {lessonHeading(item)}
                 </span>
                 <span className="toc-meta">
                   {statusLabel(status)} · about 3 min
@@ -536,9 +541,13 @@ function LessonPlayer({
   return (
     <div className="course-player">
       <aside className="course-side">
-        <button type="button" className="ghost" onClick={() => { stop(); onProgress(saveLearn({ view: 'home' })); (onExit || onHome)() }}>
-          Course home
-        </button>
+        <HomeBack
+          onClick={() => {
+            stop()
+            onProgress(saveLearn({ view: 'home' }))
+            ;(onExit || onHome)()
+          }}
+        />
         <LessonList sequence={sequence} progress={progress} openId={lesson.id} onOpen={onOpenLesson} />
       </aside>
 
@@ -560,7 +569,7 @@ function LessonPlayer({
               return (
                   <option key={item.id} value={item.id} disabled={status === 'locked'}>
                   {status === 'locked' ? 'Locked · ' : ''}
-                  {item.id === 'lfinal' ? 'Final challenge' : `Lesson ${item.number}`}: {item.title}
+                  {lessonHeading(item)}
                 </option>
               )
             })}
@@ -570,7 +579,7 @@ function LessonPlayer({
         <header className="player-head">
           <KindChips chips={lesson.chips} />
           <h1>
-            {lesson.id === 'lfinal' ? 'Final challenge' : `Lesson ${lesson.number}`}: {lesson.title}
+            {lessonHeading(lesson)}
           </h1>
         </header>
 
@@ -803,12 +812,11 @@ export default function Course({ engine, bpm = BPM, learnKey, onExit }) {
   return (
     <section className="panel course-home">
       {onExit ? (
-        <button type="button" className="ghost" onClick={onExit}>
-          Course home
-        </button>
+        <HomeBack onClick={onExit} />
       ) : null}
-      <h1>Module 9: Improvising (Jimmy Page)</h1>
-      <p className="lede">{COURSE_GOAL}</p>
+      <h1>Module 9: Improvising</h1>
+      <p className="lede">{MODULE_9_INTRO}</p>
+      <p className="lesson-evidence">{COURSE_GOAL}</p>
       <div className="progress-block">
         <p className="progress-label">
           {done} of {sequence.length} done
@@ -828,6 +836,10 @@ export default function Course({ engine, bpm = BPM, learnKey, onExit }) {
         Continue
       </button>
       <LessonList sequence={sequence} progress={progress} openId={null} onOpen={openLesson} />
+      <div className="about">
+        <h2>About / Credits</h2>
+        <p className="lesson-evidence">{SAMPLE_CREDIT}</p>
+      </div>
     </section>
   )
 }

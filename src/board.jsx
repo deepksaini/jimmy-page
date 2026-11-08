@@ -109,6 +109,20 @@ export function SoundHint() {
   return <p className="sound-hint">Click the page once to turn on sound.</p>
 }
 
+export function HomeBack({ onClick }) {
+  return (
+    <button type="button" className="home-back" onClick={onClick}>
+      <svg className="home-back-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          fill="currentColor"
+          d="M15.4 5.4 8.8 12l6.6 6.6-1.4 1.4L6 12l8-8.8 1.4 1.2z"
+        />
+      </svg>
+      back to home
+    </button>
+  )
+}
+
 export function KindChips({ chips }) {
   if (!chips?.length) return null
   return (

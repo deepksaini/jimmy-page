@@ -6,7 +6,9 @@ This file is the source of truth for everything the app teaches. The app should 
 
 By the end you'll know which notes fit each chord, and how to turn one small idea into four bars.
 
-Who it is for: a guitarist who knows the A minor pentatonic box but mostly runs up and down it when trying to improvise.
+Who it's for: Someone who can play a few songs on guitar but knows almost no theory.
+
+Module 9 in the app starts after the theory modules: "You've learned the theory. Now you'll practice using it, one lesson at a time." Lessons 1 and 3 are omitted because Modules 4–6 cover them. The live lessons are 9.1–9.6 (former Lessons 4–8 and the final challenge).
 
 ## How every lesson is built
 
@@ -145,7 +147,7 @@ Pass: all three right. Not yet: highlight what was missed or extra.
 
 **Remember:** A chord is every other note of the scale. F and G each have one note you don't have in your five.
 
-## Lesson 4: Chord notes are the notes that fit right now
+## 9.1 Chord notes
 
 Chip: Fact (which notes are in which chord). Common guideline (that chord notes sound settled).
 
@@ -166,7 +168,7 @@ This is the main step from "running the scale" to soloing: aim for the chord, no
 
 **Remember:** Aim for the chord, not just the scale.
 
-## Lesson 5: Passing notes and landing
+## 9.2 Passing notes and landing
 
 Chip: Common guideline
 
@@ -192,7 +194,7 @@ Somewhere in the four bars, a non-chord note is followed straight away by a chor
 
 **Remember:** Pass through tension, land on a chord note.
 
-## Lesson 6: One idea, four bars
+## 9.3 One idea, four bars
 
 Chip: Common guideline
 
@@ -224,7 +226,7 @@ At most one scale run (three or more notes stepping the same way along C, D, E, 
 
 **Remember:** One idea, said again, changed, then finished.
 
-## Lesson 7: Rhythm and space
+## 9.4 Rhythm and space
 
 Chip: Common guideline (the counting itself is Fact)
 
@@ -253,7 +255,7 @@ At least one note that starts off the beat (slot 1, 3, 5 or 7).
 
 **Remember:** Where a note lands matters as much as which note it is.
 
-## Lesson 8: The blue note
+## 9.5 The blue note in a phrase
 
 Chip: Common guideline (the note's name and position are Fact)
 
@@ -278,7 +280,7 @@ E♭ is never the last note of a bar.
 
 **Remember:** The blue note is a stepping stone, not a place to stop.
 
-## Final challenge: your own four bars, no help
+## 9.6 Final challenge
 
 Chip: none
 

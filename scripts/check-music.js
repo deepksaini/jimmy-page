@@ -10,6 +10,7 @@ import {
   ACOUSTIC_FILES,
   midiOf as fullMidi,
   noteName as fullName,
+  SAMPLE_CREDIT,
   sampleFileToToneName,
   STRUM_GAP,
 } from '../src/notes.js'
@@ -21,7 +22,8 @@ import { MODULE_5 } from '../src/theory/module5.js'
 import { MODULE_6 } from '../src/theory/module6.js'
 import { MODULE_7 } from '../src/theory/module7.js'
 import { MODULE_8 } from '../src/theory/module8.js'
-import { MODULE_9_IDS } from '../src/theory/module9.js'
+import { MODULE_9, MODULE_9_IDS } from '../src/theory/module9.js'
+import { LESSONS } from '../src/course.js'
 import { MODULE_10 } from '../src/theory/module10.js'
 import { nextConcept } from '../src/theory/catalog.js'
 import { buildLearningReport } from '../src/theory/report.js'
@@ -268,6 +270,11 @@ const longLearn = splitLearn(
 )
 assert(longLearn.length === 2, 'learn text splits around 120 words')
 
+assert(
+  SAMPLE_CREDIT ===
+    'Guitar samples: tonejs-instruments by Nicholaus Brosowsky (CC BY 3.0), from the University of Iowa Musical Instrument Samples and Karoryfer Samples.',
+  'about credits uses the sample README attribution line',
+)
 assert(ACOUSTIC_FILES.length === 37, 'acoustic set has 37 notes')
 assert(sampleFileToToneName('Cs4') === 'C#4', 'Cs4 maps to Tone C#4')
 assert(sampleFileToToneName('A2') === 'A2', 'A2 stays A2')
@@ -287,7 +294,20 @@ assert(MODULE_5.concepts.length === 3, 'module 5 has three concepts')
 assert(MODULE_6.concepts.length === 3, 'module 6 has three concepts')
 assert(MODULE_7.concepts.length === 3, 'module 7 has three concepts')
 assert(MODULE_8.concepts.length === 4, 'module 8 has four concepts')
-assert(MODULE_9_IDS.join() === 'l4,l5,l6,l7,l8,lfinal', 'module 9 uses lessons 4-8 and the final challenge')
+assert(MODULE_9_IDS.join() === 'l4,l5,l6,l7,l8,lfinal', 'module 9 uses chord notes through the final challenge')
+assert(MODULE_9.title === 'Improvising', 'module 9 title is Improvising')
+assert(
+  MODULE_9.intro === "You've learned the theory. Now you'll practice using it, one lesson at a time.",
+  'module 9 opens with the practice line',
+)
+assert(
+  catalog(LESSONS, MODULE_9_IDS)
+    .map((item) => `${item.number} ${item.title}`)
+    .join('|') ===
+    '9.1 Chord notes|9.2 Passing notes and landing|9.3 One idea, four bars|9.4 Rhythm and space|9.5 The blue note in a phrase|9.6 Final challenge',
+  'module 9 lessons are numbered 9.1–9.6',
+)
+assert(!LESSONS.some((item) => item.id === 'l1' || item.id === 'l3'), 'key/scale/chord lessons are not in module 9')
 assert(MODULE_10.items.length === 5, 'module 10 lists five next steps')
 assert(parsePhrase('D4@0×1, E♭4@1×1, E4@2×6').length === 3, 'blue-note example parses')
 assert(VOICINGS.C.length === 5, 'C voicing skips the low E string')

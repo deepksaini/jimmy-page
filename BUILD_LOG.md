@@ -84,3 +84,10 @@ Stage 2 (Modules 5–8) and Stage 3 (Module 9, Module 10, remove Free practice) 
 Modules 5–8 use the Diagnose / Explain / Verify / Continue player and the THEORY_COURSE.md copy (keys, minor, rhythm, pentatonic/box 1/blue note). Module 9 is COURSE.md Lessons 4–8 plus the final challenge, with the four-bar builder inside Try it. Module 10 is the roadmap page. Free practice is removed from the nav.
 
 `npm run check` and `npm run build` passed.
+
+## Polish — Module 9 numbering, audience, credits
+Dropped Module 9 Lessons 1 and 3 (key/scale/chord and how chords are built); Modules 4–6 already cover that. Remaining lessons are 9.1 Chord notes through 9.6 Final challenge. Module title is “Improvising”. The module opens with “You've learned the theory. Now you'll practice using it, one lesson at a time.” Course home who-it's-for is now “Someone who can play a few songs on guitar but knows almost no theory.” About / Credits shows the sample README attribution line.
+
+Phone width 375: home, Module 9 list, and 9.1 wrap with no horizontal overflow.
+
+`npm run check` and `npm run build` passed.

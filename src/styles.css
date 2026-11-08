@@ -115,6 +115,30 @@ button:focus-visible {
 .ghost { background: transparent; }
 .ghost.on { border-color: var(--accent); }
 
+.home-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  margin: 0 0 0.85rem;
+  padding: 0.15rem 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+  color: var(--accent);
+  font-size: 0.92rem;
+  line-height: 1.2;
+  cursor: pointer;
+}
+.home-back:hover {
+  border: none;
+  text-decoration: underline;
+}
+.home-back-icon {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex: none;
+}
+
 .app {
   max-width: 860px;
   width: 100%;
@@ -609,6 +633,10 @@ button.beat {
   min-width: 0;
 }
 
+.transport .home-back {
+  margin: 0;
+}
+
 .next-row { margin-top: 1.1rem; }
 
 .choice-list {
@@ -870,6 +898,21 @@ button.beat {
   padding: 0.7rem 0.85rem;
 }
 
+.toc-module {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0.55rem 0.15rem 0.25rem;
+}
+
+button.toc-module:hover {
+  border: none;
+}
+
+button.toc-module:hover .toc-title {
+  color: var(--accent);
+}
+
 .toc-item.current { border-color: var(--accent); }
 .toc-item.locked { opacity: 0.55; cursor: not-allowed; }
 
@@ -920,7 +963,7 @@ button.beat {
   max-width: 100%;
 }
 
-.course-side .ghost { margin-bottom: 0.7rem; }
+.course-side .home-back { margin-bottom: 0.7rem; }
 
 .course-jump { display: none; margin-bottom: 0.7rem; }
 .course-jump select {

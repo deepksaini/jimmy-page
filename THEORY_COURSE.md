@@ -2,7 +2,7 @@
 
 This file is the source of truth for what the app teaches and how it teaches. **Do not invent course content.** If a concept below has no full content yet, show it as "Coming next" instead of making something up.
 
-**Who it's for:** someone who can play a few songs on guitar but knows almost no theory, only that there are 7 note letters and some sharps and flats.
+**Who it's for:** Someone who can play a few songs on guitar but knows almost no theory.
 
 **Course goal (show on the course home):** Go from "I know a few chords" to understanding why notes and chords work, and using that to improvise your own phrases.
 
@@ -85,7 +85,7 @@ First diagnose answer, gap shown, explanations shown, each verify attempt (quest
 | 6 | Minor keys | Full content below |
 | 7 | Rhythm | Full content below |
 | 8 | The pentatonic scale | Full content below |
-| 9 | Improvising (Jimmy Page) | Use COURSE.md Lessons 4 to 8 and the final challenge |
+| 9 | Improvising | Chord notes, landing, one idea, rhythm, blue note, final challenge |
 | 10 | What comes next | Roadmap page |
 
 ---
@@ -1346,8 +1346,10 @@ Why?
 
 **Remember:** The blue note is ♭5. Pass through it, don't stop on it.
 
-## Module 9: Improvising (Jimmy Page)
-Use COURSE.md Lessons 4 to 8 and the final challenge (chord notes, passing notes and landing, one idea in four bars, rhythm and space, the blue note). Its backing (Am, F, G, Am) is i, VI, VII, i from Module 6.
+## Module 9: Improvising
+You've learned the theory. Now you'll practice using it, one lesson at a time.
+
+Lessons 1 and 3 from COURSE.md are omitted here because Modules 4–6 already cover key/scale/chord and how chords are built. The app uses 9.1 Chord notes, 9.2 Passing notes and landing, 9.3 One idea, four bars, 9.4 Rhythm and space, 9.5 The blue note in a phrase, 9.6 Final challenge. Backing (Am, F, G, Am) is i, VI, VII, i from Module 6.
 
 ## Module 10: What comes next (roadmap page)
 - Seventh chords and how their extra note changes what fits.
