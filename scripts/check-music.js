@@ -27,7 +27,7 @@ import { LESSONS } from '../src/course.js'
 import { MODULE_10 } from '../src/theory/module10.js'
 import { nextConcept } from '../src/theory/catalog.js'
 import { buildLearningReport } from '../src/theory/report.js'
-import { diagnosePath, verifyOutcome } from '../src/theoryLogic.js'
+import { continueSummary, diagnosePath, verifyOutcome } from '../src/theoryLogic.js'
 import { VOICINGS } from '../src/voicings.js'
 import {
   bar4EndsOnA,
@@ -322,6 +322,62 @@ assert(
   verifyOutcome(MODULE_1.concepts[0].verify[0], 'E and F', 'E and F (and B and C) sit right next to each other in the musical alphabet') ===
     'success',
   'right answer and reason is success',
+)
+
+const c11 = MODULE_1.concepts[0]
+const knewWhy = 'E and F (and B and C) sit right next to each other in the musical alphabet'
+assert(
+  continueSummary(c11, {
+    diagnoseAnswer: '12',
+    verifies: [{ result: 'success', answer: 'E and F', reason: knewWhy }],
+    status: 'learned',
+  }) === `You already knew this. You picked 12 and explained why ${knewWhy}.`,
+  'continue summary when diagnose and first verify succeed',
+)
+assert(
+  continueSummary(c11, {
+    diagnoseAnswer: '7',
+    verifies: [{ result: 'success', answer: 'E and F', reason: knewWhy }],
+    status: 'learned',
+  }) === 'At first you picked 7. After the explanation, you answered E and F and explained why.',
+  'continue summary after a wrong diagnose then a pass',
+)
+assert(
+  continueSummary(c11, {
+    diagnoseAnswer: 'Not sure',
+    verifies: [{ result: 'success', answer: 'E and F', reason: knewWhy }],
+    status: 'learned',
+  }).startsWith('At first you picked Not sure.'),
+  'continue summary after Not sure then a pass',
+)
+assert(
+  continueSummary(c11, {
+    diagnoseAnswer: '12',
+    verifies: [
+      { result: 'right-wrong-reason', answer: 'E and F', reason: 'Notes after E are always sharps' },
+      { result: 'success', answer: 'E and F', reason: knewWhy },
+    ],
+    status: 'learned',
+  }) === "You picked the right answer, and your second reason showed why it's right.",
+  'continue summary after a right answer with a second reason',
+)
+assert(
+  continueSummary(c11, {
+    diagnoseAnswer: '7',
+    verifies: [{ result: 'wrong', answer: 'C and D', reason: null }],
+    status: 'not-yet',
+  }) === "This one was shown to you, so it's marked 'not yet shown'. Try Revisit later.",
+  'continue summary after Show me and continue',
+)
+assert(
+  buildLearningReport(MODULE_1, {
+    '1.1': {
+      diagnoseAnswer: '12',
+      verifies: [{ result: 'success', answer: 'E and F', reason: knewWhy }],
+      status: 'learned',
+    },
+  }).whereStarted[0].includes('You already knew this'),
+  'report where-you-started uses the continue summary',
 )
 
 console.log('music checks passed')

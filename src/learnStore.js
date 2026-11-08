@@ -41,6 +41,10 @@ export function loadLearn() {
   }
 }
 
+export function clearLearn() {
+  window.localStorage.removeItem(KEY)
+}
+
 export function saveLearn(patch) {
   const state = { ...loadLearn(), ...patch }
   window.localStorage.setItem(KEY, JSON.stringify(state))

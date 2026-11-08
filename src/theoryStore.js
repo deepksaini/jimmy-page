@@ -34,6 +34,10 @@ export function loadTheory() {
   }
 }
 
+export function clearTheory() {
+  window.localStorage.removeItem(KEY)
+}
+
 export function saveTheory(patch) {
   const state = { ...loadTheory(), ...patch }
   window.localStorage.setItem(KEY, JSON.stringify(state))

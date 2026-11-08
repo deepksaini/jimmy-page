@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import { createEngine } from './audio.js'
 import { noteFromKey } from './keys.js'
 import { applyTheme, loadTheme } from './theme.js'
+import { clearLearn } from './learnStore.js'
+import { clearTheory } from './theoryStore.js'
 import TheoryCourse from './TheoryCourse.jsx'
 import './styles.css'
 
@@ -22,7 +24,23 @@ function ThemeSwitch({ theme, onTheme }) {
 
 export default function App() {
   const [theme, setTheme] = useState(() => applyTheme(loadTheme()))
+  const [session, setSession] = useState(0)
   const learnKey = useRef(null)
+
+  function restartSession() {
+    if (!window.confirm('Start over from the beginning? This clears progress on this computer. Theme is kept.')) return
+    engine.stop()
+    clearTheory()
+    clearLearn()
+    try {
+      window.localStorage.removeItem('pbp-phrases')
+      window.localStorage.removeItem('pbp-lesson-stats')
+    } catch {
+      /* ignore */
+    }
+    learnKey.current = null
+    setSession((n) => n + 1)
+  }
 
   useEffect(() => {
     async function onKey(event) {
@@ -51,10 +69,12 @@ export default function App() {
     <div className="app wide" onPointerDown={() => engine.unlock()}>
       <p className="eyebrow">Jimmy Page</p>
       <div className="top-row">
-        <span />
+        <button type="button" className="ghost restart" onClick={restartSession}>
+          Restart session
+        </button>
         <ThemeSwitch theme={theme} onTheme={(next) => setTheme(applyTheme(next))} />
       </div>
-      <TheoryCourse engine={engine} learnKey={learnKey} />
+      <TheoryCourse key={session} engine={engine} learnKey={learnKey} />
     </div>
   )
 }

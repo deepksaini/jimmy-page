@@ -91,3 +91,13 @@ Dropped Module 9 Lessons 1 and 3 (key/scale/chord and how chords are built); Mod
 Phone width 375: home, Module 9 list, and 9.1 wrap with no horizontal overflow.
 
 `npm run check` and `npm run build` passed.
+
+## Continue summaries and lesson-card width
+Continue now picks one line from what happened: already knew it, wrong/not sure then passed, right answer with a second reason, or shown with “Show me”. THEORY_COURSE.md rule 7 and the learning report “Where you started” use the same lines. The lesson card and “In your own words” box stay within the viewport; only `.full-neck-wrap` scrolls sideways.
+
+Tested 375 / 768 / 1280: page width matches the viewport; at 375 and 768 the fretboard wrap scrolls (860px inside a narrower card); at 1280 the neck fits.
+
+`npm run check` and `npm run build` passed.
+
+## Restart session
+A Restart session button sits in the top-left of the header (Light/Dark stay top-right). It asks first, then clears theory and Module 9 progress on this computer, keeps the theme, and returns to course home.

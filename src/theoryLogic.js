@@ -54,12 +54,26 @@ export function statusLine(stage, conceptName) {
 
 export function continueSummary(concept, record) {
   const first = record.diagnoseAnswer
-  const ok = (record.verifies || []).find((item) => item.result === 'success')
-  if (ok) {
-    return `At first you picked ${first}. Later you answered “${ok.answer}” and explained why.`
-  }
+  const verifies = record.verifies || []
+  const ok = verifies.find((item) => item.result === 'success')
+  const hadWrongReason = verifies.some((item) => item.result === 'right-wrong-reason')
+  const diagnoseCorrect = !!diagnosePath(concept, first).correct
+  const firstTry = verifies[0]?.result === 'success'
+
   if (record.status === 'not-yet') {
-    return `You saw this concept after three tries: ${concept.remember}`
+    return "This one was shown to you, so it's marked 'not yet shown'. Try Revisit later."
+  }
+  if (hadWrongReason && ok) {
+    return "You picked the right answer, and your second reason showed why it's right."
+  }
+  if (diagnoseCorrect && firstTry && ok) {
+    if (ok.reason) {
+      return `You already knew this. You picked ${first} and explained why ${ok.reason}.`
+    }
+    return `You already knew this. You picked ${first} and explained why.`
+  }
+  if (ok) {
+    return `At first you picked ${first}. After the explanation, you answered ${ok.answer} and explained why.`
   }
   return concept.remember
 }
