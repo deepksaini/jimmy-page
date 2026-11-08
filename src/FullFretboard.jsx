@@ -6,7 +6,7 @@ import {
   scaleDegree,
   STRING_NAMES,
 } from './notes.js'
-import { usePhoneLink } from './PhoneLink.jsx'
+import { PhoneStatus, phoneCanClick, usePhoneLink } from './PhoneLink.jsx'
 
 const ROOT_PC = { C: 0, 'C♯': 1, D: 2, 'D♯': 3, E: 4, F: 5, 'F♯': 6, G: 7, 'G♯': 8, A: 9, 'A♯': 10, B: 11 }
 
@@ -20,6 +20,7 @@ export function FullFretboard({
 }) {
   const phone = usePhoneLink()
   const litCursor = cursor || phone?.lastNote
+  const canClick = phoneCanClick(interactive, phone)
   const rootPc = ROOT_PC[scaleRoot] ?? 0
 
   function mark(string, fret) {
@@ -35,9 +36,10 @@ export function FullFretboard({
 
   return (
     <div className="full-neck-wrap">
+      <PhoneStatus aboveBoard />
       <div
         className="full-neck"
-        role={interactive ? 'group' : 'img'}
+        role={canClick ? 'group' : 'img'}
         aria-label="Guitar neck, six strings, frets 0 to 12"
       >
         <div className="full-frets" aria-hidden="true">
@@ -61,7 +63,7 @@ export function FullFretboard({
                     {text ? <span className="dot-name">{text}</span> : null}
                   </>
                 )
-                if (!interactive) {
+                if (!canClick) {
                   return (
                     <span key={fret} className="cell">
                       {body}

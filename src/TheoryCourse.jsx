@@ -16,7 +16,6 @@ import { buildLearningReport, moduleForConcept, nextModule } from './theory/repo
 import { SAMPLE_CREDIT } from './notes.js'
 import { chordNotes } from './voicings.js'
 import {
-  continueSummary,
   diagnosePath,
   explainText,
   findOption,
@@ -165,16 +164,6 @@ function LearningReport({ mod, state, engine, onHome, onContinue }) {
         <p className="lesson-evidence">Not enough answers yet to judge this.</p>
       ) : (
         <>
-          <h2>Where you started</h2>
-          {report.whereStarted.length ? (
-            <ul className="report-list">
-              {report.whereStarted.map((line) => (
-                <li key={line}>{line}</li>
-              ))}
-            </ul>
-          ) : (
-            <p className="lesson-evidence">No diagnose answers in this module.</p>
-          )}
           <h2>What we covered</h2>
           {report.covered.length ? (
             report.covered.map((text, index) => (
@@ -229,7 +218,6 @@ function ConceptPlayer({ concept, engine, state, onState, onHome, onReport }) {
   const [note, setNote] = useState('')
   const [cursor, setCursor] = useState(null)
   const [labels, setLabels] = useState(concept.hear?.labelMode || 'names')
-  const [ownWords, setOwnWords] = useState(record.note || '')
   const [offerReveal, setOfferReveal] = useState(false)
   const stage = state.stage
   const verifyQ = concept.verify[state.verifyIndex] || concept.verify[0]
@@ -265,7 +253,7 @@ function ConceptPlayer({ concept, engine, state, onState, onHome, onReport }) {
   }
 
   function finishVerifySuccess(verifies, extraNote) {
-    if (extraNote) setNote(extraNote)
+    setNote(extraNote || 'Yes.')
     persist({ stage: 'continue', pendingAnswer: null }, { verifies, status: 'learned' })
   }
 
@@ -334,7 +322,7 @@ function ConceptPlayer({ concept, engine, state, onState, onHome, onReport }) {
 
   function leaveToReport(status) {
     engine.stop()
-    patchConcept(concept.id, { note: ownWords, status })
+    patchConcept(concept.id, { status })
     const mod = moduleForConcept(concept.id)
     persist({ view: 'report', reportModuleId: mod.id, currentId: concept.id })
     onReport(mod.id)
@@ -412,12 +400,6 @@ function ConceptPlayer({ concept, engine, state, onState, onHome, onReport }) {
 
       {stage === 'continue' ? (
         <>
-          <p className="remember">{continueSummary(concept, latest)}</p>
-          {latest.status === 'not-yet' ? <p className="lesson-evidence">{concept.remember}</p> : null}
-          <label className="own-words">
-            In your own words (optional)
-            <textarea value={ownWords} onChange={(event) => setOwnWords(event.target.value)} rows={3} />
-          </label>
           <div className="transport">
             <button
               type="button"
@@ -427,7 +409,6 @@ function ConceptPlayer({ concept, engine, state, onState, onHome, onReport }) {
                 const mod = moduleForConcept(concept.id)
                 const last = mod.concepts[mod.concepts.length - 1]
                 patchConcept(concept.id, {
-                  note: ownWords,
                   status: latest.status === 'not-yet' ? 'not-yet' : 'learned',
                 })
                 if (!following || following.moduleId !== mod.id || concept.id === last.id) {

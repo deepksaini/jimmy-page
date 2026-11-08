@@ -10,7 +10,7 @@ import {
   POSITIONS,
   STRING_LABELS,
 } from './music.js'
-import { usePhoneLink } from './PhoneLink.jsx'
+import { PhoneStatus, phoneCanClick, usePhoneLink } from './PhoneLink.jsx'
 
 const DEGREE = { A: '1', C: '♭3', D: '4', E: '5', G: '♭7' }
 
@@ -27,6 +27,7 @@ export function Fretboard({
 }) {
   const phone = usePhoneLink()
   const litCursor = cursor || phone?.lastNote
+  const canClick = phoneCanClick(interactive, phone)
   const landing = showLanding && chord ? LANDING_PC[chord] : []
   function cellPos(string, fret) {
     const found = POSITIONS.find((item) => item.string === string && item.fret === fret)
@@ -38,7 +39,8 @@ export function Fretboard({
   }
   return (
     <div className="neck-wrap">
-      <div className="neck" role={interactive ? 'group' : 'img'} aria-label="Guitar neck, G, B and high e, frets 5 to 8">
+      <PhoneStatus aboveBoard />
+      <div className="neck" role={canClick ? 'group' : 'img'} aria-label="Guitar neck, G, B and high e, frets 5 to 8">
         <div className="fret-nums" aria-hidden="true">
           <span />
           {[5, 6, 7, 8].map((fret) => (
@@ -70,7 +72,7 @@ export function Fretboard({
                     <span className="dot-name">{label}</span>
                   </>
                 )
-                if (!interactive) {
+                if (!canClick) {
                   return (
                     <span key={fret} className="cell">
                       {body}

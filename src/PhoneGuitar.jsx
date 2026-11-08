@@ -24,30 +24,39 @@ async function keepAwake() {
 function PhoneNeck({ namesOn, onTap, cursor }) {
   return (
     <div className="phone-neck" role="group" aria-label="Guitar neck, six strings, frets 0 to 12, nut at the top">
-      <div className="phone-nut" aria-hidden="true">
+      <div className="phone-strings" aria-hidden="true">
         {COURSE_STRINGS.map((string) => (
-            <span key={string}>{string === 1 ? 'e' : noteName(midiOf(string, 0))}</span>
-          ))}
+          <i key={string} className={`phone-string s${string}`} />
+        ))}
+      </div>
+      <div className="phone-nut" aria-hidden="true">
+        <span />
+        {COURSE_STRINGS.map((string) => (
+          <span key={string}>{string === 1 ? 'e' : noteName(midiOf(string, 0))}</span>
+        ))}
       </div>
       {COURSE_FRETS.map((fret) => (
-        <div className={`phone-fret ${fret === 0 ? 'open' : ''}`} key={fret}>
+        <div
+          className={`phone-fret ${fret === 0 ? 'open' : ''} ${fret === 1 ? 'after-nut' : ''}`}
+          key={fret}
+        >
           <span className="phone-fret-num">{fret}</span>
           {COURSE_STRINGS.map((string) => {
-              const now = cursor && cursor.string === string && cursor.fret === fret
-              return (
-                <button
-                  key={`${string}-${fret}`}
-                  type="button"
-                  className={`phone-cell ${now ? 'now' : ''}`}
-                  onClick={() => onTap(string, fret)}
-                  aria-label={`${noteName(midiOf(string, fret))} string ${string} fret ${fret}`}
-                >
-                  {namesOn ? <span>{noteName(midiOf(string, fret))}</span> : null}
-                </button>
-              )
-            })}
+            const now = cursor && cursor.string === string && cursor.fret === fret
+            return (
+              <button
+                key={`${string}-${fret}`}
+                type="button"
+                className={`phone-cell ${now ? 'now' : ''}`}
+                onClick={() => onTap(string, fret)}
+                aria-label={`${noteName(midiOf(string, fret))} string ${string} fret ${fret}`}
+              >
+                {namesOn ? <span>{noteName(midiOf(string, fret))}</span> : null}
+              </button>
+            )
+          })}
           {DOTS[fret] ? (
-            <span className="phone-dots" aria-hidden="true">
+            <span className={`phone-dots n${DOTS[fret]}`} aria-hidden="true">
               {Array.from({ length: DOTS[fret] }, (_, index) => (
                 <i key={index} />
               ))}
@@ -131,6 +140,10 @@ export default function PhoneGuitar({ sessionId }) {
       <header className="phone-top">
         <p className="phone-brand">Jimmy Page</p>
         <p className="phone-status" role="status">
+          <span
+            className={`phone-dot ${status === 'Connected' || status === 'Connected. Tap to start.' ? 'on' : 'off'}`}
+            aria-hidden="true"
+          />
           {status}
         </p>
         {started ? (

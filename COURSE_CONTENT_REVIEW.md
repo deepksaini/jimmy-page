@@ -66,31 +66,24 @@ Understanding, not the number of questions answered, decides when the learner mo
    - Right answer, wrong reason: say the answer may be right, show the right reason as a hint, and ask the next verify question. Stay in Verify.
    - Wrong answer: show a short, specific fix and ask a different verify question. Stay in Verify.
    - After 3 verify questions without a full success: offer "Show me and continue". Mark the concept as "not yet shown" (not as learned).
-7. **Continue or Revisit.** After success, show one line chosen by what actually happened:
-   - Diagnose correct and verify passed on the first try: "You already knew this. You picked [diagnose answer] and explained why [short reason]."
-   - Diagnose wrong or "Not sure", then verify passed: "At first you picked [diagnose answer]. After the explanation, you answered [verify answer] and explained why."
-   - A verify answer was right but its first reason was wrong, then passed: "You picked the right answer, and your second reason showed why it's right."
-   - "Show me and continue" was used: "This one was shown to you, so it's marked 'not yet shown'. Try Revisit later."
-   Then offer three buttons: **Next concept**, **Revisit with a new example** (uses any verify questions not yet seen), **Stop for now**.
+7. **Continue or Revisit.** After a correct check, show only the one-line confirmation and three buttons: **Next concept**, **Revisit with a new example** (uses any verify questions not yet seen), **Stop for now**. Do not add a summary of what happened.
 8. **Never move on without the learner choosing to.**
 9. **Status line** at the bottom of every concept screen: `Stage: Diagnose | Explain | Verify | Continue · Concept: [name]`.
-10. **Optional "In your own words" box** after Continue. It's saved to the learner's notes, not graded.
 
 ## Learning report (end of each module, and when the learner stops)
 
-Build it only from what the learner actually did. Never invent scores or gains. Five headings:
+Build it only from what the learner actually did. Never invent scores or gains. Four headings:
 
-1. **Where you started**: the same Continue summary for each concept they started, chosen by what actually happened (already knew it, wrong/not sure then passed, right answer with a second reason, or shown / not yet shown).
-2. **What we covered**: the explanations and examples actually shown.
-3. **Evidence**: their correct answer plus reason pairs, quoted.
-4. **Still uncertain**: concepts skipped, revealed with "Show me", or verified only once.
-5. **One next step**: one concrete suggestion aimed at the most uncertain concept.
+1. **What we covered**: the explanations and examples actually shown.
+2. **Evidence**: their correct answer plus reason pairs, quoted.
+3. **Still uncertain**: concepts skipped, revealed with "Show me", or verified only once.
+4. **One next step**: one concrete suggestion aimed at the most uncertain concept.
 
 If the learner stopped early, say plainly "Not enough answers yet to judge this."
 
 ## What the app saves (localStorage, per concept)
 
-First diagnose answer, gap shown, explanations shown, each verify attempt (question, answer, reason, result), status (learned / not yet shown / skipped), and the learner's own-words note.
+First diagnose answer, gap shown, explanations shown, each verify attempt (question, answer, reason, result), and status (learned / not yet shown / skipped).
 
 ## Sound and fretboard
 

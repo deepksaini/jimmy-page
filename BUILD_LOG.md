@@ -93,7 +93,7 @@ Phone width 375: home, Module 9 list, and 9.1 wrap with no horizontal overflow.
 `npm run check` and `npm run build` passed.
 
 ## Continue summaries and lesson-card width
-Continue now picks one line from what happened: already knew it, wrong/not sure then passed, right answer with a second reason, or shown with “Show me”. THEORY_COURSE.md rule 7 and the learning report “Where you started” use the same lines. The lesson card and “In your own words” box stay within the viewport; only `.full-neck-wrap` scrolls sideways.
+Continue used to add a recap line after a correct check, and the learning report used to open with a starting-point recap. Those recap lines are gone (see the later log entry). The lesson card stays within the viewport; only `.full-neck-wrap` scrolls sideways.
 
 Tested 375 / 768 / 1280: page width matches the viewport; at 375 and 768 the fretboard wrap scrolls (860px inside a narrower card); at 1280 the neck fits.
 
@@ -106,5 +106,15 @@ A Restart session button sits in the top-left of the header (Light/Dark stay top
 Laptop shows Play on your phone when `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` are set; otherwise the button is hidden and the laptop neck still works. QR uses `?phone=SESSION_ID`. Phone is a vertical 6-string 0–12 neck, Tap to start, acoustic samples, broadcast `hello`/`note`. Laptop treats a phone note like a click (Module 9 box only). Idle 15s marks disconnected. Laptop does not double-play phone taps.
 
 Need a real Supabase project and those env vars on Vercel to test a phone on cellular against a laptop on wifi (iPhone Safari). Without the keys this pass only proves build and unit checks.
+
+`npm run check` and `npm run build` passed.
+
+## Continue: confirmation only
+Continue no longer shows a recap of what happened. After a correct check the screen is the one-line confirmation plus Next concept / Revisit / Stop for now. The learning report has no starting-point recap heading. `src/` has none of that recap copy.
+
+## Phone neck look and phone-first laptop
+The phone neck keeps the same 6×13 tap grid. It now has a wood background, vertical string lines (thicker on the low strings), fret wires, a thicker nut above fret 1, and inlay dots at 3, 5, 7, 9, and a double at 12. Note names sit on top.
+
+Course copy is “Play on your phone (recommended), or click the fretboard below.” A green or red pulsing dot marks connected vs not. When a phone is connected, the laptop neck is display-only, lights phone notes, and still highlights lesson notes, with “Playing from your phone” above it. When the phone is disconnected, the laptop neck is clickable again.
 
 `npm run check` and `npm run build` passed.

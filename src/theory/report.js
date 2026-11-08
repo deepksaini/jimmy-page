@@ -1,4 +1,3 @@
-import { continueSummary } from '../theoryLogic.js'
 import { emptyConcept } from '../theoryStore.js'
 import { MODULES } from './catalog.js'
 
@@ -26,9 +25,7 @@ export function buildLearningReport(mod, conceptMap) {
     concept,
     rec: conceptMap[concept.id] || emptyConcept(),
   }))
-  const whereStarted = items
-    .filter((item) => item.rec.diagnoseAnswer || item.rec.status === 'not-yet')
-    .map((item) => `${item.concept.id} ${item.concept.name}: ${continueSummary(item.concept, item.rec)}`)
+  const started = items.filter((item) => item.rec.diagnoseAnswer || item.rec.status === 'not-yet')
   const covered = []
   items.forEach((item) => {
     const keys = item.rec.explanationsShown || []
@@ -53,12 +50,11 @@ export function buildLearningReport(mod, conceptMap) {
     const wins = (rec.verifies || []).filter((row) => row.result === 'success')
     return wins.length === 1
   })
-  const enough = whereStarted.length > 0 || evidence.length > 0
+  const enough = started.length > 0 || evidence.length > 0
   const next = uncertain[0] || items.find((item) => item.rec.status !== 'learned')
   return {
     early: !enough,
     title: `Module ${mod.number}: ${mod.title}`,
-    whereStarted,
     covered,
     evidence,
     uncertain: uncertain.map((item) => `${item.concept.id} ${item.concept.name}`),

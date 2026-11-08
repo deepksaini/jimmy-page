@@ -27,7 +27,9 @@ import { LESSONS } from '../src/course.js'
 import { MODULE_10 } from '../src/theory/module10.js'
 import { nextConcept } from '../src/theory/catalog.js'
 import { buildLearningReport } from '../src/theory/report.js'
-import { continueSummary, diagnosePath, verifyOutcome } from '../src/theoryLogic.js'
+import { diagnosePath, verifyOutcome } from '../src/theoryLogic.js'
+import { readFileSync, readdirSync, statSync } from 'node:fs'
+import { join } from 'node:path'
 import { channelName, PHONE_HOME, PHONE_TRY, validNote } from '../src/phoneLink.js'
 import { VOICINGS } from '../src/voicings.js'
 import {
@@ -326,61 +328,36 @@ assert(
   'right answer and reason is success',
 )
 
-const c11 = MODULE_1.concepts[0]
-const knewWhy = 'E and F (and B and C) sit right next to each other in the musical alphabet'
-assert(
-  continueSummary(c11, {
-    diagnoseAnswer: '12',
-    verifies: [{ result: 'success', answer: 'E and F', reason: knewWhy }],
-    status: 'learned',
-  }) === `You already knew this. You picked 12 and explained why ${knewWhy}.`,
-  'continue summary when diagnose and first verify succeed',
-)
-assert(
-  continueSummary(c11, {
-    diagnoseAnswer: '7',
-    verifies: [{ result: 'success', answer: 'E and F', reason: knewWhy }],
-    status: 'learned',
-  }) === 'At first you picked 7. After the explanation, you answered E and F and explained why.',
-  'continue summary after a wrong diagnose then a pass',
-)
-assert(
-  continueSummary(c11, {
-    diagnoseAnswer: 'Not sure',
-    verifies: [{ result: 'success', answer: 'E and F', reason: knewWhy }],
-    status: 'learned',
-  }).startsWith('At first you picked Not sure.'),
-  'continue summary after Not sure then a pass',
-)
-assert(
-  continueSummary(c11, {
+const learnedReport = buildLearningReport(MODULE_1, {
+  '1.1': {
     diagnoseAnswer: '12',
     verifies: [
-      { result: 'right-wrong-reason', answer: 'E and F', reason: 'Notes after E are always sharps' },
-      { result: 'success', answer: 'E and F', reason: knewWhy },
+      {
+        result: 'success',
+        answer: 'E and F',
+        reason: 'E and F (and B and C) sit right next to each other in the musical alphabet',
+      },
     ],
     status: 'learned',
-  }) === "You picked the right answer, and your second reason showed why it's right.",
-  'continue summary after a right answer with a second reason',
-)
-assert(
-  continueSummary(c11, {
-    diagnoseAnswer: '7',
-    verifies: [{ result: 'wrong', answer: 'C and D', reason: null }],
-    status: 'not-yet',
-  }) === "This one was shown to you, so it's marked 'not yet shown'. Try Revisit later.",
-  'continue summary after Show me and continue',
-)
-assert(
-  buildLearningReport(MODULE_1, {
-    '1.1': {
-      diagnoseAnswer: '12',
-      verifies: [{ result: 'success', answer: 'E and F', reason: knewWhy }],
-      status: 'learned',
-    },
-  }).whereStarted[0].includes('You already knew this'),
-  'report where-you-started uses the continue summary',
-)
+  },
+})
+assert(!Object.hasOwn(learnedReport, 'whereStarted'), 'learning report has no Where you started')
+assert(learnedReport.evidence.length === 1, 'learning report still lists evidence')
+
+function walkSrc(dir) {
+  return readdirSync(dir).flatMap((name) => {
+    const path = join(dir, name)
+    if (statSync(path).isDirectory()) return walkSrc(path)
+    return path.endsWith('.js') || path.endsWith('.jsx') ? [path] : []
+  })
+}
+const banned = ['You already knew this', 'At first you picked', 'Where you started']
+for (const file of walkSrc(join(process.cwd(), 'src'))) {
+  const text = readFileSync(file, 'utf8')
+  for (const phrase of banned) {
+    assert(!text.includes(phrase), `${file} has no continue-summary copy`)
+  }
+}
 
 assert(channelName('abc1234567') === 'guitar-abc1234567', 'phone channel uses guitar-session id')
 assert(validNote({ string: 1, fret: 5 })?.fret === 5, 'valid phone note')
@@ -389,7 +366,10 @@ assert(!validNote({ string: 1, fret: 13 }), 'rejects fret 13')
 assert(inBoxPos(1, 5), 'high e fret 5 is in the box')
 assert(!inBoxPos(6, 3), 'low E is outside the box')
 assert(inBoxPos(3, 8, true) && !inBoxPos(3, 8, false), 'blue note is optional in the box')
-assert(PHONE_HOME.includes('phone'), 'course home has phone copy')
+assert(
+  PHONE_HOME === 'Play on your phone (recommended), or click the fretboard below.',
+  'course home tells the learner to play on the phone first',
+)
 assert(
   LESSONS.every((item) => item.try.text.includes(PHONE_TRY)),
   'each Module 9 Try step mentions playing on a phone',

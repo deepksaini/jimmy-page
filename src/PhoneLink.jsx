@@ -134,7 +134,7 @@ export function PhoneLinkProvider({ children }) {
             <p className="lesson-evidence">Scan this code. Your phone becomes a guitar and sends taps here live.</p>
             {qrSrc ? <img className="phone-qr" src={qrSrc} alt="QR code to open this course on your phone" /> : <p>Making the code…</p>}
             <p className="hint">{value.link}</p>
-            <p className="remember">{connected ? 'Phone connected' : 'Phone disconnected'}</p>
+            <PhoneStatus />
             <button type="button" className="primary" onClick={() => setModalOpen(false)}>
               Close
             </button>
@@ -155,13 +155,19 @@ export function PlayOnPhoneButton({ className = 'ghost play-phone' }) {
   )
 }
 
-export function PhoneStatus() {
+export function PhoneStatus({ aboveBoard = false }) {
   const phone = usePhoneLink()
   if (!phone?.visible) return null
+  const live = phone.connected
   return (
-    <p className="phone-status" role="status">
-      {phone.connected ? 'Phone connected' : 'Phone disconnected'}
+    <p className={`phone-status ${aboveBoard ? 'phone-live' : ''}`} role="status">
+      <span className={`phone-dot ${live ? 'on' : 'off'}`} aria-hidden="true" />
+      {live ? 'Playing from your phone' : 'Phone disconnected'}
       {phone.outOfBox ? ` · ${phone.outOfBox}` : ''}
     </p>
   )
+}
+
+export function phoneCanClick(interactive, phone) {
+  return !!interactive && !phone?.connected
 }

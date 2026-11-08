@@ -1,9 +1,7 @@
 export const PHONE_QUERY = 'phone'
 export const PHONE_IDLE_MS = 15000
-export const PHONE_HOME =
-  'No guitar? Use your phone as one: scan the code and play along.'
-export const PHONE_TRY =
-  'No guitar nearby? Scan the code to play on your phone.'
+export const PHONE_HOME = 'Play on your phone (recommended), or click the fretboard below.'
+export const PHONE_TRY = 'Play on your phone (recommended), or click the fretboard below.'
 export const OUT_OF_BOX = "That note isn't in the box"
 
 export function supabaseConfig() {
