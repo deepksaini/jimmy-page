@@ -11,7 +11,7 @@ import {
 } from './theory/catalog.js'
 import Course from './Course.jsx'
 import { PHONE_HOME } from './phoneLink.js'
-import { usePhoneLink } from './PhoneLink.jsx'
+import { PlayOnPhoneButton, usePhoneLink } from './PhoneLink.jsx'
 import { buildLearningReport, moduleForConcept, nextModule } from './theory/report.js'
 import { SAMPLE_CREDIT } from './notes.js'
 import { chordNotes } from './voicings.js'
@@ -588,6 +588,9 @@ export default function TheoryCourse({ engine, learnKey }) {
       <p className="lede">{COURSE_GOAL}</p>
       <p className="lesson-evidence">{COURSE_FOR}</p>
       <p className="lesson-evidence">{PHONE_HOME}</p>
+      <div className="phone-cta">
+        <PlayOnPhoneButton className="primary play-phone" />
+      </div>
       <div className="progress-block">
         <p className="progress-label">
           {learned} of {concepts.length} concepts done

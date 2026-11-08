@@ -3,7 +3,7 @@ import { HomeBack, KindChips } from './board.jsx'
 import { COURSE_GOAL, LESSONS, lessonById, phraseEvents } from './course.js'
 import { MODULE_9_IDS, MODULE_9_INTRO } from './theory/module9.js'
 import { PHONE_HOME } from './phoneLink.js'
-import { usePhoneLink } from './PhoneLink.jsx'
+import { PlayOnPhoneButton, usePhoneLink } from './PhoneLink.jsx'
 import { SAMPLE_CREDIT } from './notes.js'
 import {
   catalog,
@@ -842,6 +842,9 @@ export default function Course({ engine, bpm = BPM, learnKey, onExit }) {
       <p className="lede">{MODULE_9_INTRO}</p>
       <p className="lesson-evidence">{COURSE_GOAL}</p>
       <p className="lesson-evidence">{PHONE_HOME}</p>
+      <div className="phone-cta">
+        <PlayOnPhoneButton className="primary play-phone" />
+      </div>
       <div className="progress-block">
         <p className="progress-label">
           {done} of {sequence.length} done

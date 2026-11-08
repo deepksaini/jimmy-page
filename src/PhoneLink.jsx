@@ -145,11 +145,11 @@ export function PhoneLinkProvider({ children }) {
   )
 }
 
-export function PlayOnPhoneButton() {
+export function PlayOnPhoneButton({ className = 'ghost play-phone' }) {
   const phone = usePhoneLink()
   if (!phone?.visible) return null
   return (
-    <button type="button" className="ghost play-phone" onClick={phone.openModal}>
+    <button type="button" className={className} onClick={phone.openModal}>
       Play on your phone
     </button>
   )
