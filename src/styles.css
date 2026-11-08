@@ -1194,3 +1194,117 @@ button.toc-module:hover .toc-title {
   border-color: transparent transparent transparent currentColor;
 }
 .hear-see { margin: 0.7rem 0; }
+
+.play-phone { font-size: 0.85rem; padding: 0.4rem 0.75rem; }
+.phone-status {
+  margin: 0 0 0.7rem;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.phone-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(20, 24, 22, 0.45);
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+}
+.phone-modal-card {
+  background: var(--panel);
+  color: var(--ink);
+  border-radius: 18px;
+  padding: 1.1rem;
+  width: min(22rem, 100%);
+  max-width: 100%;
+  display: grid;
+  gap: 0.7rem;
+}
+.phone-qr {
+  width: min(280px, 100%);
+  height: auto;
+  justify-self: center;
+  background: #fff;
+}
+
+.phone-app {
+  min-height: 100dvh;
+  max-width: 100%;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  padding: 0.7rem 0.7rem 1.2rem;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 0.55rem;
+}
+.phone-top {
+  display: grid;
+  gap: 0.25rem;
+}
+.phone-brand {
+  margin: 0;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  color: var(--accent);
+}
+.phone-start {
+  min-height: 44px;
+  width: 100%;
+  border-radius: 16px;
+  font-size: 1.2rem;
+  padding: 1.4rem;
+}
+.phone-neck {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 0;
+}
+.phone-nut,
+.phone-fret {
+  display: grid;
+  grid-template-columns: 1.6rem repeat(6, minmax(44px, 1fr));
+  gap: 0.2rem;
+  align-items: stretch;
+  position: relative;
+}
+.phone-nut span,
+.phone-fret-num {
+  display: grid;
+  place-items: center;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+.phone-cell {
+  min-height: 44px;
+  min-width: 44px;
+  border-radius: 8px;
+  padding: 0;
+  font-size: 0.72rem;
+  background: var(--neck);
+}
+.phone-cell.now {
+  border-color: var(--accent);
+  background: var(--neck-2);
+}
+.phone-dots {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  gap: 0.2rem;
+  pointer-events: none;
+}
+.phone-dots i {
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--dot-fill);
+}
+.phone-fret.open .phone-cell {
+  background: var(--panel-2);
+}

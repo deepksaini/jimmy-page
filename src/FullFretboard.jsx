@@ -6,6 +6,7 @@ import {
   scaleDegree,
   STRING_NAMES,
 } from './notes.js'
+import { usePhoneLink } from './PhoneLink.jsx'
 
 const ROOT_PC = { C: 0, 'C♯': 1, D: 2, 'D♯': 3, E: 4, F: 5, 'F♯': 6, G: 7, 'G♯': 8, A: 9, 'A♯': 10, B: 11 }
 
@@ -17,6 +18,8 @@ export function FullFretboard({
   onPlace,
   interactive = false,
 }) {
+  const phone = usePhoneLink()
+  const litCursor = cursor || phone?.lastNote
   const rootPc = ROOT_PC[scaleRoot] ?? 0
 
   function mark(string, fret) {
@@ -49,7 +52,7 @@ export function FullFretboard({
             <div className="full-wire">
               {COURSE_FRETS.map((fret) => {
                 const midi = midiOf(string, fret)
-                const now = cursor && cursor.string === string && cursor.fret === fret
+                const now = litCursor && litCursor.string === string && litCursor.fret === fret
                 const lit = mark(string, fret)
                 const text = label(string, fret)
                 const body = (

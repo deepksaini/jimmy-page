@@ -24,7 +24,7 @@ export const LESSONS = [
     ],
     try: {
       kind: 'four-bars-end-chord',
-      text: 'Play the four-bar loop. The rings on the fretboard move to the chord notes each time the chord changes. End each bar on a ringed note.',
+      text: 'Play the four-bar loop. The rings on the fretboard move to the chord notes each time the chord changes. End each bar on a ringed note. No guitar nearby? Scan the code to play on your phone.',
     },
     remember: 'Aim for the chord, not just the scale.',
   },
@@ -56,7 +56,7 @@ export const LESSONS = [
     ],
     try: {
       kind: 'bar4-compare',
-      text: 'Write bar 4 so it ends on A. Then change only the last note to D, and press Hear it to compare.',
+      text: 'Write bar 4 so it ends on A. Then change only the last note to D, and press Hear it to compare. No guitar nearby? Scan the code to play on your phone.',
     },
     remember: 'Pass through tension, land on a chord note.',
   },
@@ -97,7 +97,7 @@ export const LESSONS = [
     ],
     try: {
       kind: 'four-bar-idea',
-      text: 'Build four bars from your own idea using the moves.',
+      text: 'Build four bars from your own idea using the moves. No guitar nearby? Scan the code to play on your phone.',
     },
     remember: 'One idea, said again, changed, then finished.',
   },
@@ -120,7 +120,7 @@ export const LESSONS = [
     ],
     try: {
       kind: 'four-bar-rhythm',
-      text: 'Use a rhythm move or Spread them out, and add at least one rest.',
+      text: 'Use a rhythm move or Spread them out, and add at least one rest. No guitar nearby? Scan the code to play on your phone.',
     },
     remember: 'Where a note lands matters as much as which note it is.',
   },
@@ -140,7 +140,7 @@ export const LESSONS = [
     ],
     try: {
       kind: 'four-bar-blue',
-      text: 'In bar 2 or 3, add E♭ once, between D and E.',
+      text: 'In bar 2 or 3, add E♭ once, between D and E. No guitar nearby? Scan the code to play on your phone.',
     },
     remember: 'The blue note is a stepping stone, not a place to stop.',
   },
@@ -167,7 +167,7 @@ export const LESSONS = [
     ],
     try: {
       kind: 'four-bar-challenge',
-      text: 'Write four bars with no rings, no moves, and no hints.',
+      text: 'Write four bars with no rings, no moves, and no hints. No guitar nearby? Scan the code to play on your phone.',
       goals: [
         'Every bar ends on a chord note for that bar\'s chord.',
         'Bar 4 ends on A.',

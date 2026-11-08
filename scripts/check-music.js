@@ -28,6 +28,7 @@ import { MODULE_10 } from '../src/theory/module10.js'
 import { nextConcept } from '../src/theory/catalog.js'
 import { buildLearningReport } from '../src/theory/report.js'
 import { continueSummary, diagnosePath, verifyOutcome } from '../src/theoryLogic.js'
+import { channelName, PHONE_HOME, PHONE_TRY, validNote } from '../src/phoneLink.js'
 import { VOICINGS } from '../src/voicings.js'
 import {
   bar4EndsOnA,
@@ -55,6 +56,7 @@ import {
   noteName,
   pcOf,
   POSITIONS,
+  inBox as inBoxPos,
   RHYTHM_PATTERNS,
   resolveLastToA,
   resizeNote,
@@ -378,6 +380,19 @@ assert(
     },
   }).whereStarted[0].includes('You already knew this'),
   'report where-you-started uses the continue summary',
+)
+
+assert(channelName('abc1234567') === 'guitar-abc1234567', 'phone channel uses guitar-session id')
+assert(validNote({ string: 1, fret: 5 })?.fret === 5, 'valid phone note')
+assert(!validNote({ string: 0, fret: 3 }), 'rejects string 0')
+assert(!validNote({ string: 1, fret: 13 }), 'rejects fret 13')
+assert(inBoxPos(1, 5), 'high e fret 5 is in the box')
+assert(!inBoxPos(6, 3), 'low E is outside the box')
+assert(inBoxPos(3, 8, true) && !inBoxPos(3, 8, false), 'blue note is optional in the box')
+assert(PHONE_HOME.includes('phone'), 'course home has phone copy')
+assert(
+  LESSONS.every((item) => item.try.text.includes(PHONE_TRY)),
+  'each Module 9 Try step mentions playing on a phone',
 )
 
 console.log('music checks passed')

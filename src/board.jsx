@@ -10,6 +10,7 @@ import {
   POSITIONS,
   STRING_LABELS,
 } from './music.js'
+import { usePhoneLink } from './PhoneLink.jsx'
 
 const DEGREE = { A: '1', C: '♭3', D: '4', E: '5', G: '♭7' }
 
@@ -24,6 +25,8 @@ export function Fretboard({
   showNumbers = false,
   allowBlue = false,
 }) {
+  const phone = usePhoneLink()
+  const litCursor = cursor || phone?.lastNote
   const landing = showLanding && chord ? LANDING_PC[chord] : []
   function cellPos(string, fret) {
     const found = POSITIONS.find((item) => item.string === string && item.fret === fret)
@@ -54,7 +57,7 @@ export function Fretboard({
                 const picked =
                   pos && selected.some((item) => item.string === string && item.fret === fret)
                 const now =
-                  pos && cursor && cursor.string === string && cursor.fret === fret
+                  pos && litCursor && litCursor.string === string && litCursor.fret === fret
                 if (!pos) {
                   return <span key={fret} className="cell" />
                 }

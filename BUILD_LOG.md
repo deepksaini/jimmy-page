@@ -101,3 +101,10 @@ Tested 375 / 768 / 1280: page width matches the viewport; at 375 and 768 the fre
 
 ## Restart session
 A Restart session button sits in the top-left of the header (Light/Dark stay top-right). It asks first, then clears theory and Module 9 progress on this computer, keeps the theme, and returns to course home.
+
+## Play on your phone
+Laptop shows Play on your phone when `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` are set; otherwise the button is hidden and the laptop neck still works. QR uses `?phone=SESSION_ID`. Phone is a vertical 6-string 0–12 neck, Tap to start, acoustic samples, broadcast `hello`/`note`. Laptop treats a phone note like a click (Module 9 box only). Idle 15s marks disconnected. Laptop does not double-play phone taps.
+
+Need a real Supabase project and those env vars on Vercel to test a phone on cellular against a laptop on wifi (iPhone Safari). Without the keys this pass only proves build and unit checks.
+
+`npm run check` and `npm run build` passed.

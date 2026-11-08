@@ -10,6 +10,8 @@ import {
   nextConcept,
 } from './theory/catalog.js'
 import Course from './Course.jsx'
+import { PHONE_HOME } from './phoneLink.js'
+import { usePhoneLink } from './PhoneLink.jsx'
 import { buildLearningReport, moduleForConcept, nextModule } from './theory/report.js'
 import { SAMPLE_CREDIT } from './notes.js'
 import { chordNotes } from './voicings.js'
@@ -503,11 +505,18 @@ function RoadmapPage({ engine, onHome }) {
 }
 
 export default function TheoryCourse({ engine, learnKey }) {
+  const phone = usePhoneLink()
   const [state, setState] = useState(() => loadTheory())
   const concepts = useMemo(() => allConcepts(), [])
   const open = state.view === 'lesson' ? conceptById(state.currentId) : null
   const reportMod = state.view === 'report' ? MODULES.find((item) => item.id === state.reportModuleId) : null
   const learned = concepts.filter((item) => state.concepts[item.id]?.status === 'learned').length
+
+  useEffect(() => {
+    if (!phone || state.view === 'improv') return undefined
+    phone.setBoxMode('full')
+    return phone.registerTap(() => {})
+  }, [phone, state.view])
 
   function openModule(mod) {
     if (mod.kind === 'improv') {
@@ -578,6 +587,7 @@ export default function TheoryCourse({ engine, learnKey }) {
       <h1>Jimmy Page</h1>
       <p className="lede">{COURSE_GOAL}</p>
       <p className="lesson-evidence">{COURSE_FOR}</p>
+      <p className="lesson-evidence">{PHONE_HOME}</p>
       <div className="progress-block">
         <p className="progress-label">
           {learned} of {concepts.length} concepts done

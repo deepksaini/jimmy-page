@@ -67,6 +67,11 @@ export function boxPositions() {
 
 export const POSITIONS = boxPositions()
 
+export function inBox(string, fret, allowBlue = false) {
+  if (POSITIONS.some((item) => item.string === string && item.fret === fret)) return true
+  return !!(allowBlue && string === 3 && fret === 8)
+}
+
 export function emptyBars() {
   return Array.from({ length: BARS }, () => [])
 }

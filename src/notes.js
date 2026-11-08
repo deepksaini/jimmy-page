@@ -91,5 +91,18 @@ export function acousticUrls() {
   return urls
 }
 
+export function acousticUrlsForNeck() {
+  const needed = new Set()
+  for (const string of COURSE_STRINGS) {
+    for (const fret of COURSE_FRETS) needed.add(noteWithOctave(midiOf(string, fret)))
+  }
+  const urls = {}
+  for (const file of ACOUSTIC_FILES) {
+    const name = sampleFileToToneName(file)
+    if (needed.has(name)) urls[name] = `${file}.mp3`
+  }
+  return Object.keys(urls).length ? urls : acousticUrls()
+}
+
 export const SAMPLE_CREDIT =
   'Guitar samples: tonejs-instruments by Nicholaus Brosowsky (CC BY 3.0), from the University of Iowa Musical Instrument Samples and Karoryfer Samples.'

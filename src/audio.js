@@ -330,7 +330,8 @@ export function createEngine() {
     async unlock() {
       await ensure()
     },
-    async pluck(string, fret) {
+    async pluck(string, fret, options = {}) {
+      if (options.silent) return
       await ensure()
       triggerNote(string, fret, 0.9, Tone.now(), 0.82)
     },

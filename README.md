@@ -21,3 +21,12 @@ This is a static Vite app.
    - **Build Command:** `npm run build`
    - **Output Directory:** `dist`
 4. Deploy.
+
+## Play on your phone
+
+Optional. Create a Supabase project, turn on Realtime (broadcast only, no tables), and set:
+
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_ANON_KEY`
+
+Locally, copy `.env.example` to `.env`. On Vercel, add the same names in Project Settings → Environment Variables, then redeploy. If they are missing, the Play on your phone button stays hidden and the laptop fretboard still works.

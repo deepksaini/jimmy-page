@@ -162,7 +162,7 @@ This is the main step from "running the scale" to soloing: aim for the chord, no
 1. D held for a whole bar over A minor: `D4@0×8`.
 2. The same D held for a whole bar over G: `D4@0×8`.
 
-**Try it** Play the four-bar loop. The rings on the fretboard move to the chord notes each time the chord changes. End each bar on a ringed note.
+**Try it** Play the four-bar loop. The rings on the fretboard move to the chord notes each time the chord changes. End each bar on a ringed note. No guitar nearby? Scan the code to play on your phone.
 
 **Check** In the user's four bars, the last note of each bar is a chord note for that bar's chord. Pass: 4 of 4. Not yet: list which bars missed, and the chord notes for each.
 
@@ -185,7 +185,7 @@ Ending on D or G sounds unfinished, as if the phrase wants to go on.
 1. Ends on D (unfinished): `G4@0×1, E4@1×1, G4@2×2, D4@4×4`
 2. Ends on A (finished): `G4@0×1, E4@1×1, G4@2×2, A4@4×4`
 
-**Try it** Write bar 4 so it ends on A. Then change only the last note to D, and press Hear it to compare.
+**Try it** Write bar 4 so it ends on A. Then change only the last note to D, and press Hear it to compare. No guitar nearby? Scan the code to play on your phone.
 
 **Check**
 
@@ -216,7 +216,7 @@ Bar 4, A minor (finished): `G4@0×1, E4@1×1, G4@2×2, A4@4×4`
 
 Then, for contrast, the same four bars as scale runs (C, D, E, G, A going up and down) so the user hears the difference.
 
-**Try it** Go to Create, Round 1. Build four bars from your own idea using the moves.
+**Try it** Build four bars from your own idea using the moves. No guitar nearby? Scan the code to play on your phone.
 
 **Check**
 
@@ -246,7 +246,7 @@ A long note at the end of a phrase gives it weight.
 2. Off the beat: `E4@1×2, G4@3×2, A4@5×3`
 3. With a rest: `E4@0×1, rest@1×3, G4@4×1, A4@5×3`
 
-**Try it** In Create, use a rhythm move or "Spread them out", and add at least one rest.
+**Try it** Use a rhythm move or "Spread them out", and add at least one rest. No guitar nearby? Scan the code to play on your phone.
 
 **Check**
 
@@ -270,7 +270,7 @@ Where it is: G string, fret 8. Key: Shift+D.
 1. Without the blue note: `D4@0×2, E4@2×6`
 2. With the blue note passing through: `D4@0×1, E♭4@1×1, E4@2×6`
 
-**Try it** In bar 2 or 3, add E♭ once, between D and E.
+**Try it** In bar 2 or 3, add E♭ once, between D and E. No guitar nearby? Scan the code to play on your phone.
 
 **Check**
 
@@ -285,6 +285,8 @@ E♭ is never the last note of a bar.
 Chip: none
 
 **Learn** No rings, no moves, no hints. Use everything from the lessons. The goals are shown before you start, so you know what you're aiming for.
+
+**Try it** Write four bars with no rings, no moves, and no hints. No guitar nearby? Scan the code to play on your phone.
 
 **Goals** (show as a checklist before and after)
 

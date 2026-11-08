@@ -1,7 +1,9 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { HomeBack, KindChips } from './board.jsx'
 import { COURSE_GOAL, LESSONS, lessonById, phraseEvents } from './course.js'
 import { MODULE_9_IDS, MODULE_9_INTRO } from './theory/module9.js'
+import { PHONE_HOME } from './phoneLink.js'
+import { usePhoneLink } from './PhoneLink.jsx'
 import { SAMPLE_CREDIT } from './notes.js'
 import {
   catalog,
@@ -210,6 +212,8 @@ function LessonPlayer({
   const [quizChecked, setQuizChecked] = useState(false)
   const [fails, setFails] = useState(() => Number(progress.fails?.[lesson.id]) || 0)
   const [revealed, setRevealed] = useState(!!progress.revealed?.[lesson.id] || alreadyDone)
+  const pickTap = useRef(null)
+  const phone = usePhoneLink()
 
   function persist(patch) {
     onProgress(
@@ -297,8 +301,8 @@ function LessonPlayer({
     )
   }
 
-  function placeInBar(barIndex, string, fret) {
-    engine.pluck(string, fret)
+  function placeInBar(barIndex, string, fret, options = {}) {
+    engine.pluck(string, fret, options)
     setBars((current) => {
       if (eventsInOrder(current[barIndex]).length >= IDEA_MAX_NOTES) return current
       return current.map((bar, i) => (i === barIndex ? addNote(bar, string, fret) : bar))
@@ -449,28 +453,45 @@ function LessonPlayer({
       learnKey.current = null
       return undefined
     }
-    learnKey.current = (mapped) => {
-      const kind = lesson.try.kind
-      if (
-        kind === 'four-bars-end-chord' ||
-        kind === 'four-bar-idea' ||
-        kind === 'four-bar-rhythm' ||
-        kind === 'four-bar-blue' ||
-        kind === 'four-bar-challenge'
-      ) {
-        placeInBar(liveBar, mapped.string, mapped.fret)
-        return
-      }
-      if (kind === 'bar4-compare') {
-        placeInBar(3, mapped.string, mapped.fret)
-        return
-      }
-      engine.pluck(mapped.string, mapped.fret)
+    learnKey.current = (mapped, options = {}) => {
+      applyTryTap(mapped.string, mapped.fret, options)
     }
     return () => {
       learnKey.current = null
     }
   }, [learnKey, lesson, liveBar, engine, phase])
+
+  function applyTryTap(string, fret, options = {}) {
+    const kind = lesson.try.kind
+    setCursor({ string, fret })
+    if (phase !== 'try') return
+    if (kind === 'pick-chord-notes') {
+      pickTap.current?.(string, fret, options)
+      return
+    }
+    if (
+      kind === 'four-bars-end-chord' ||
+      kind === 'four-bar-idea' ||
+      kind === 'four-bar-rhythm' ||
+      kind === 'four-bar-blue' ||
+      kind === 'four-bar-challenge'
+    ) {
+      placeInBar(liveBar, string, fret, options)
+      return
+    }
+    if (kind === 'bar4-compare') {
+      placeInBar(3, string, fret, options)
+      return
+    }
+    engine.pluck(string, fret, options)
+  }
+
+  useEffect(() => {
+    if (!phone) return undefined
+    const allowBlue = lesson.try?.kind === 'four-bar-blue' || lesson.try?.kind === 'four-bar-challenge'
+    phone.setBoxMode(allowBlue ? 'box-blue' : 'box')
+    return phone.registerTap((string, fret, options) => applyTryTap(string, fret, options))
+  }, [phone, lesson, liveBar, phase])
 
   function goPhase(next) {
     stop()
@@ -627,6 +648,7 @@ function LessonPlayer({
                   onPlay={playLoop}
                   onStop={stop}
                   onPlace={(string, fret) => engine.pluck(string, fret)}
+                  cursor={cursor || phone?.lastNote}
                 />
               ) : null}
               {lesson.try.kind === 'pick-chord-notes' ? (
@@ -634,6 +656,7 @@ function LessonPlayer({
                   engine={engine}
                   targets={lesson.try.targets}
                   onComplete={() => setTryPassed(true)}
+                  tapRef={pickTap}
                 />
               ) : null}
               {['four-bars-end-chord', 'four-bar-idea', 'four-bar-rhythm', 'four-bar-blue', 'four-bar-challenge'].includes(
@@ -648,7 +671,7 @@ function LessonPlayer({
                   onPlayLoop={playLoop}
                   onStop={stop}
                   onPlace={(string, fret) => placeInBar(liveBar, string, fret)}
-                  cursor={cursor}
+                  cursor={cursor || phone?.lastNote}
                   showLanding={lesson.try.kind !== 'four-bar-challenge'}
                   allowBlue={lesson.try.kind === 'four-bar-blue' || lesson.try.kind === 'four-bar-challenge'}
                   goals={
@@ -691,6 +714,7 @@ function LessonPlayer({
                   onHear={hearBar4}
                   onStop={stop}
                   onPlace={(string, fret) => placeInBar(3, string, fret)}
+                  cursor={cursor || phone?.lastNote}
                 />
               ) : null}
               {tryPassed && lesson.try.kind === 'pick-chord-notes' ? (
@@ -817,6 +841,7 @@ export default function Course({ engine, bpm = BPM, learnKey, onExit }) {
       <h1>Module 9: Improvising</h1>
       <p className="lede">{MODULE_9_INTRO}</p>
       <p className="lesson-evidence">{COURSE_GOAL}</p>
+      <p className="lesson-evidence">{PHONE_HOME}</p>
       <div className="progress-block">
         <p className="progress-label">
           {done} of {sequence.length} done

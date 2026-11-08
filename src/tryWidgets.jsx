@@ -16,11 +16,11 @@ import {
   spreadNotes,
 } from './music.js'
 
-export function LoopListen({ playing, onPlay, onStop, onPlace, liveBar }) {
+export function LoopListen({ playing, onPlay, onStop, onPlace, liveBar, cursor }) {
   return (
     <div>
       <ChordBadge barIndex={liveBar} />
-      <Fretboard chord={CHORDS[liveBar]} events={[]} interactive onPlace={onPlace} showLanding />
+      <Fretboard chord={CHORDS[liveBar]} events={[]} interactive onPlace={onPlace} showLanding cursor={cursor} />
       <div className="transport">
         <button type="button" className="primary" onClick={playing ? onStop : onPlay}>
           {playing ? 'Stop' : 'Play'}
@@ -31,14 +31,14 @@ export function LoopListen({ playing, onPlay, onStop, onPlace, liveBar }) {
   )
 }
 
-export function PickChordNotes({ engine, targets, onComplete }) {
+export function PickChordNotes({ engine, targets, onComplete, tapRef }) {
   const [step, setStep] = useState(0)
   const [picked, setPicked] = useState([])
   const [note, setNote] = useState('')
   const target = targets[step]
 
-  function toggle(string, fret) {
-    engine.pluck(string, fret)
+  function toggle(string, fret, options = {}) {
+    engine.pluck(string, fret, options)
     setPicked((current) => {
       const exists = current.some((item) => item.string === string && item.fret === fret)
       if (exists) return current.filter((item) => !(item.string === string && item.fret === fret))
@@ -62,6 +62,8 @@ export function PickChordNotes({ engine, targets, onComplete }) {
     }
     onComplete()
   }
+
+  if (tapRef) tapRef.current = toggle
 
   return (
     <div>
@@ -188,11 +190,11 @@ export function applyBuilderMove(bars, liveBar, kind) {
   return bars.map((bar, index) => (index === liveBar ? next : bar))
 }
 
-export function Bar4Try({ playing, hearId, onHear, onStop, bars, onPlace }) {
+export function Bar4Try({ playing, hearId, onHear, onStop, bars, onPlace, cursor }) {
   return (
     <div>
       <ChordBadge barIndex={3} />
-      <Fretboard chord="Am" events={bars[3]} interactive onPlace={onPlace} showLanding />
+      <Fretboard chord="Am" events={bars[3]} interactive onPlace={onPlace} showLanding cursor={cursor} />
       <p className="lesson-evidence">
         Bar 4:{' '}
         {eventsInOrder(bars[3]).map((event) => noteName(midiOf(event.string, event.fret))).join(' → ') ||

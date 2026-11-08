@@ -4,6 +4,9 @@ import { noteFromKey } from './keys.js'
 import { applyTheme, loadTheme } from './theme.js'
 import { clearLearn } from './learnStore.js'
 import { clearTheory } from './theoryStore.js'
+import { PhoneLinkProvider, PhoneStatus, PlayOnPhoneButton } from './PhoneLink.jsx'
+import PhoneGuitar from './PhoneGuitar.jsx'
+import { readPhoneSession } from './phoneLink.js'
 import TheoryCourse from './TheoryCourse.jsx'
 import './styles.css'
 
@@ -22,7 +25,7 @@ function ThemeSwitch({ theme, onTheme }) {
   )
 }
 
-export default function App() {
+function CourseApp() {
   const [theme, setTheme] = useState(() => applyTheme(loadTheme()))
   const [session, setSession] = useState(0)
   const learnKey = useRef(null)
@@ -66,15 +69,25 @@ export default function App() {
   }, [])
 
   return (
-    <div className="app wide" onPointerDown={() => engine.unlock()}>
-      <p className="eyebrow">Jimmy Page</p>
-      <div className="top-row">
-        <button type="button" className="ghost restart" onClick={restartSession}>
-          Restart session
-        </button>
-        <ThemeSwitch theme={theme} onTheme={(next) => setTheme(applyTheme(next))} />
+    <PhoneLinkProvider>
+      <div className="app wide" onPointerDown={() => engine.unlock()}>
+        <p className="eyebrow">Jimmy Page</p>
+        <div className="top-row">
+          <button type="button" className="ghost restart" onClick={restartSession}>
+            Restart session
+          </button>
+          <PlayOnPhoneButton />
+          <ThemeSwitch theme={theme} onTheme={(next) => setTheme(applyTheme(next))} />
+        </div>
+        <PhoneStatus />
+        <TheoryCourse key={session} engine={engine} learnKey={learnKey} />
       </div>
-      <TheoryCourse key={session} engine={engine} learnKey={learnKey} />
-    </div>
+    </PhoneLinkProvider>
   )
+}
+
+export default function App() {
+  const phoneSession = readPhoneSession()
+  if (phoneSession) return <PhoneGuitar sessionId={phoneSession} />
+  return <CourseApp />
 }
