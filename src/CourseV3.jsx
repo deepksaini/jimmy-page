@@ -69,7 +69,7 @@ function LearningReport({ mod, state, onHome, onContinue }) {
   )
 }
 
-export default function CourseV3({ engine }) {
+export default function CourseV3({ engine, onRestart }) {
   const [state, setState] = useState(() => loadV3())
   const lessons = useMemo(() => course.modules.flatMap((mod) => mod.lessons || []), [])
   const open = state.view === 'lesson' ? lessons.find((item) => item.id === state.currentId) : null
@@ -130,9 +130,21 @@ export default function CourseV3({ engine }) {
 
   return (
     <section className="panel course-home">
-      <h1>Jimmy Page</h1>
-      <p className="lede">{course.goal}</p>
-      <p className="lesson-evidence">{course.who}</p>
+      <div className="home-title-row">
+        <h1>Jimmy Page</h1>
+        {onRestart ? (
+          <button type="button" className="ghost restart" onClick={onRestart}>
+            Restart session
+          </button>
+        ) : null}
+      </div>
+      <p className="lede">
+        Become the next Jimmy Page by understanding how the notes, scales and chords you already play are built, then
+        use that to improvise your own phrases.
+      </p>
+      <p className="home-sub">
+        Learn how the notes, scales and chords you already play are built, then use them to improvise your own phrases.
+      </p>
       <div className="progress-block">
         <p className="progress-label">
           {done} of {lessons.length} lessons done
@@ -155,13 +167,19 @@ export default function CourseV3({ engine }) {
         {course.modules.map((mod) => (
           <li key={mod.id}>
             {mod.kind === 'roadmap' ? (
-              <button type="button" className="toc-item toc-module" onClick={() => setState(saveV3({ view: 'roadmap' }))}>
-                <span>
-                  <span className="toc-kicker">Module {mod.number}</span>
-                  <span className="toc-title">{mod.title}</span>
-                </span>
-                <span className="toc-status">Roadmap</span>
-              </button>
+              <>
+                <p className="toc-kicker">
+                  Module {mod.number}: {mod.title}
+                </p>
+                <ul>
+                  <li>
+                    <button type="button" className="learn-item" onClick={() => setState(saveV3({ view: 'roadmap' }))}>
+                      <span>Roadmap</span>
+                      <span>Open</span>
+                    </button>
+                  </li>
+                </ul>
+              </>
             ) : (
               <>
                 <p className="toc-kicker">

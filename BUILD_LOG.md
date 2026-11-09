@@ -133,4 +133,6 @@ Tried a 1970s look (harvest/cream, burnt orange, Palatino, tighter padding, four
 
 Layout follow-up: docked the phone CTA to the frame (no floating gutter), showed frets 0–12 instead of clipping at 7, packed the lesson card and top bar so Restart/theme no longer sit on the guitar.
 
+Home now uses a sun/moon toggle top-right, Restart only beside the Jimmy Page heading, and Module 10 matches the other module rows. Home copy is the “Become the next Jimmy Page…” line plus the learn-how subheading.
+
 `npm run check` and `npm run build` passed.
