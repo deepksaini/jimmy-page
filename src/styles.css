@@ -354,12 +354,6 @@ h1 {
   margin: 0 0 0.55rem;
 }
 .home-title-row h1 { margin: 0; }
-.home-sub {
-  margin: 0.15rem 0 0.85rem;
-  font-size: 1.02rem;
-  color: var(--ink);
-  line-height: 1.45;
-}
 
 .restart {
   font-size: 0.85rem;

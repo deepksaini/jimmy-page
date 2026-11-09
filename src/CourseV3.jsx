@@ -139,11 +139,7 @@ export default function CourseV3({ engine, onRestart }) {
         ) : null}
       </div>
       <p className="lede">
-        Become the next Jimmy Page by understanding how the notes, scales and chords you already play are built, then
-        use that to improvise your own phrases.
-      </p>
-      <p className="home-sub">
-        Learn how the notes, scales and chords you already play are built, then use them to improvise your own phrases.
+        Learn the theory behind the chords you already play, and start improvising like your guitar heroes.
       </p>
       <div className="progress-block">
         <p className="progress-label">
