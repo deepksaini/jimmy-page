@@ -131,4 +131,6 @@ Lessons 9.1–9.6 share one builder: four bar cards, Hear the chord, box 1 on th
 
 Tried a 1970s look (harvest/cream, burnt orange, Palatino, tighter padding, four bar cards across the top). Phone disconnected: laptop neck stays clickable and shows “Phone disconnected.” Phone tab reached Connected after Tap to start.
 
+Layout follow-up: docked the phone CTA to the frame (no floating gutter), showed frets 0–12 instead of clipping at 7, packed the lesson card and top bar so Restart/theme no longer sit on the guitar.
+
 `npm run check` and `npm run build` passed.

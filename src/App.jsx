@@ -70,8 +70,8 @@ function CourseApp() {
   return (
     <GuitarLinkProvider>
       <div className="app wide" onPointerDown={() => engine.unlock()}>
-        <p className="eyebrow">Jimmy Page</p>
-        <div className="top-row">
+        <div className="app-bar">
+          <p className="eyebrow">Jimmy Page</p>
           <button type="button" className="ghost restart" onClick={restartSession}>
             Restart session
           </button>

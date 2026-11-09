@@ -90,11 +90,25 @@ html, body, #root {
 .v3-split {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1.15rem;
+  gap: 1.25rem;
   align-items: start;
   min-width: 0;
 }
-.v3-lesson, .v3-guitar { min-width: 0; }
+.v3-lesson,
+.v3-guitar { min-width: 0; }
+.v3-lesson {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.55rem;
+}
+.v3-lesson > .home-back,
+.v3-lesson > h1,
+.v3-lesson > .eyebrow,
+.v3-lesson > .lesson-evidence,
+.v3-lesson > .chip-row,
+.v3-lesson > .skip-quiz { margin: 0; }
+.v3-lesson > h1 { font-size: clamp(1.35rem, 3.4vw, 1.85rem); }
 .skip-quiz {
   background: none;
   border: 0;
@@ -103,14 +117,22 @@ html, body, #root {
   text-decoration: underline;
   font-size: 0.88rem;
   width: fit-content;
+  line-height: 1.3;
+}
+.phone-dock {
+  width: 100%;
+  max-width: 26rem;
+  display: grid;
+  gap: 0.45rem;
+  margin: 0 auto;
 }
 .phone-frame-wrap { width: 100%; }
 .phone-frame {
-  margin: 0 auto;
-  width: min(100%, 22rem);
+  margin: 0;
+  width: 100%;
   background: #111;
-  border-radius: 2rem;
-  padding: 1.1rem 0.55rem 0.7rem;
+  border-radius: 1.7rem;
+  padding: 1rem 0.45rem 0.55rem;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.28);
   position: relative;
 }
@@ -126,9 +148,9 @@ html, body, #root {
 }
 .phone-frame-screen {
   background: var(--bg);
-  border-radius: 1.1rem;
+  border-radius: 1rem;
   overflow: hidden;
-  min-height: 28rem;
+  min-height: 0;
 }
 .phone-cell.target, .phone-cell.glow {
   box-shadow: inset 0 0 0 2px rgba(255, 214, 90, 0.7);
@@ -169,12 +191,12 @@ html, body, #root {
 @media (prefers-reduced-motion: reduce) {
   .phone-cell.target, .phone-cell.target-now, .phone-cell.glow, .phone-dot { animation: none; }
 }
-@media (min-width: 768px) {
-  .v3-split { grid-template-columns: 55fr 45fr; }
-  .phone-frame-wrap { position: sticky; top: 1rem; }
-}
-@media (min-width: 1024px) {
-  .v3-split { grid-template-columns: 1fr 1fr; }
+@media (min-width: 860px) {
+  .v3-split {
+    grid-template-columns: minmax(17rem, 1fr) minmax(20rem, 26rem);
+    column-gap: 1.5rem;
+  }
+  .phone-dock { margin: 0 0 0 auto; }
 }
 
 button, input, select {
@@ -240,12 +262,12 @@ button:focus-visible {
   width: 100%;
   min-width: 0;
   margin: 0 auto;
-  padding: 1rem 20px 2.5rem;
+  padding: 0.75rem 1.1rem 2rem;
   overflow-x: hidden;
 }
 
 .app.wide {
-  max-width: min(1180px, 100%);
+  max-width: min(1120px, 100%);
 }
 
 h1, h2, p, .lede, .lesson-evidence, .status-line, .remember, .progress-label, .toc-title, .toc-meta {
@@ -268,11 +290,11 @@ h1 {
 .lesson-evidence { white-space: pre-wrap; }
 
 .eyebrow {
-  letter-spacing: 0.18em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   font-size: 0.7rem;
   color: var(--accent);
-  margin: 0 0 0.75rem;
+  margin: 0 0 0.45rem;
   font-family: var(--font);
 }
 
@@ -293,15 +315,16 @@ h1 {
   border-color: var(--accent);
 }
 
+.app-bar,
 .top-row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.55rem;
-  margin: 0 0 0.85rem;
+  gap: 0.4rem 0.65rem;
+  margin: 0 0 1rem;
   min-width: 0;
 }
+.app-bar .eyebrow { margin: 0; }
 
 .top-row .modes { margin: 0; }
 
@@ -311,7 +334,6 @@ h1 {
 }
 
 .restart {
-  margin-right: auto;
   font-size: 0.85rem;
   padding: 0.4rem 0.75rem;
 }
@@ -524,7 +546,7 @@ h3 { font-size: 1rem; margin: 0 0 0.25rem; }
   background: var(--panel);
   border: 2px solid var(--line);
   border-radius: 10px;
-  padding: 1rem 1.05rem 1.15rem;
+  padding: 0.85rem 1rem 1rem;
   min-width: 0;
   max-width: 100%;
   overflow: visible;
@@ -843,7 +865,7 @@ button.beat {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.35rem;
 }
 
 .chip-row .lesson-kind { margin: 0; }
@@ -1110,9 +1132,9 @@ button.toc-module:hover .toc-title {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: 0.6rem;
-  margin-top: 1.4rem;
-  padding-top: 0.8rem;
+  gap: 0.5rem;
+  margin-top: 0.35rem;
+  padding-top: 0.7rem;
   border-top: 1px solid var(--line);
   min-width: 0;
 }
@@ -1252,11 +1274,11 @@ button.toc-module:hover .toc-title {
   gap: 0.3rem;
 }
 .status-line {
-  margin: 1.1rem 0 0;
-  padding-top: 0.7rem;
-  border-top: 1px solid var(--line);
+  margin: 0;
+  padding: 0;
+  border: 0;
   color: var(--muted);
-  font-size: 0.9rem;
+  font-size: 0.82rem;
 }
 .own-words {
   display: grid;
@@ -1362,6 +1384,9 @@ button.toc-module:hover .toc-title {
   grid-template-rows: auto 1fr;
   gap: 0.55rem;
 }
+.phone-app .phone-cell {
+  min-height: 44px;
+}
 .phone-top {
   display: grid;
   gap: 0.25rem;
@@ -1395,9 +1420,9 @@ button.toc-module:hover .toc-title {
 }
 .phone-strings {
   position: absolute;
-  inset: 0 0 0 1.7rem;
+  inset: 0 0 0 1.35rem;
   display: grid;
-  grid-template-columns: repeat(6, minmax(44px, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   pointer-events: none;
   z-index: 1;
 }
@@ -1418,7 +1443,7 @@ button.toc-module:hover .toc-title {
 .phone-nut,
 .phone-fret {
   display: grid;
-  grid-template-columns: 1.6rem repeat(6, minmax(44px, 1fr));
+  grid-template-columns: 1.35rem repeat(6, minmax(0, 1fr));
   gap: 0;
   align-items: stretch;
   position: relative;
@@ -1443,12 +1468,12 @@ button.toc-module:hover .toc-title {
   text-shadow: 0 1px 0 rgba(255, 236, 210, 0.55);
 }
 .phone-cell {
-  min-height: 44px;
-  min-width: 44px;
+  min-height: clamp(1.55rem, 3.4vh, 2.05rem);
+  min-width: 0;
   border: 0;
   border-radius: 0;
   padding: 0;
-  font-size: 0.78rem;
+  font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.01em;
   color: #1a140c;
@@ -1501,15 +1526,16 @@ button.toc-module:hover .toc-title {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.45rem 0.75rem;
-  margin: 0 0 0.65rem;
+  gap: 0.35rem 0.55rem;
+  margin: 0;
+  width: 100%;
 }
 .phone-aside-head .phone-status {
   margin: 0;
 }
 .v3-guitar {
   display: grid;
-  gap: 0;
+  justify-items: stretch;
 }
 .bar-builder {
   display: grid;

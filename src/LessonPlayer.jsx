@@ -294,11 +294,13 @@ export default function LessonPlayer({ lessonId, engine, onHome, onReport }) {
         </p>
       </section>
       <aside className="v3-guitar">
-        <div className="phone-aside-head">
-          <PlayOnPhoneButton className="primary play-phone" />
-          <PhoneStatus />
+        <div className="phone-dock">
+          <div className="phone-aside-head">
+            <PlayOnPhoneButton className="primary play-phone" />
+            <PhoneStatus />
+          </div>
+          {frame}
         </div>
-        {frame}
       </aside>
     </div>
   )
