@@ -326,6 +326,19 @@ export function createEngine() {
             : list.length * gap + 0.1
       later(() => onDone?.(), last * 1000 + 60)
     },
+    async playClicks({ bpm = 80, bars = 2, onBeat, onDone } = {}) {
+      const audio = await ensure()
+      stop()
+      const beat = 60 / bpm
+      const start = audio.currentTime + 0.05
+      const total = bars * 4
+      for (let i = 0; i < total; i += 1) {
+        const t = start + i * beat
+        playBuffer(audio, hat, t, i % 4 === 0 ? 0.16 : 0.05, master, playing)
+        later(() => onBeat?.(i), i * beat * 1000)
+      }
+      later(() => onDone?.(), total * beat * 1000 + 80)
+    },
     stop,
     async unlock() {
       await ensure()

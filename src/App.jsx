@@ -1,13 +1,14 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { createEngine } from './audio.js'
 import { noteFromKey } from './keys.js'
 import { applyTheme, loadTheme } from './theme.js'
 import { clearLearn } from './learnStore.js'
 import { clearTheory } from './theoryStore.js'
-import { PhoneLinkProvider, PhoneStatus, PlayOnPhoneButton } from './PhoneLink.jsx'
+import { clearV3 } from './v3Store.js'
+import { GuitarLinkProvider, PhoneStatus, PlayOnPhoneButton } from './GuitarLink.jsx'
 import PhoneGuitar from './PhoneGuitar.jsx'
 import { readPhoneSession } from './phoneLink.js'
-import TheoryCourse from './TheoryCourse.jsx'
+import CourseV3 from './CourseV3.jsx'
 import './styles.css'
 
 const engine = createEngine()
@@ -28,20 +29,19 @@ function ThemeSwitch({ theme, onTheme }) {
 function CourseApp() {
   const [theme, setTheme] = useState(() => applyTheme(loadTheme()))
   const [session, setSession] = useState(0)
-  const learnKey = useRef(null)
 
   function restartSession() {
     if (!window.confirm('Start over from the beginning? This clears progress on this computer. Theme is kept.')) return
     engine.stop()
     clearTheory()
     clearLearn()
+    clearV3()
     try {
       window.localStorage.removeItem('pbp-phrases')
       window.localStorage.removeItem('pbp-lesson-stats')
     } catch {
       /* ignore */
     }
-    learnKey.current = null
     setSession((n) => n + 1)
   }
 
@@ -61,15 +61,14 @@ function CourseApp() {
       const mapped = noteFromKey(event)
       if (!mapped) return
       event.preventDefault()
-      if (learnKey.current) learnKey.current(mapped)
-      else await engine.pluck(mapped.string, mapped.fret)
+      await engine.pluck(mapped.string, mapped.fret)
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
   return (
-    <PhoneLinkProvider>
+    <GuitarLinkProvider>
       <div className="app wide" onPointerDown={() => engine.unlock()}>
         <p className="eyebrow">Jimmy Page</p>
         <div className="top-row">
@@ -80,9 +79,9 @@ function CourseApp() {
           <ThemeSwitch theme={theme} onTheme={(next) => setTheme(applyTheme(next))} />
         </div>
         <PhoneStatus />
-        <TheoryCourse key={session} engine={engine} learnKey={learnKey} />
+        <CourseV3 key={session} engine={engine} />
       </div>
-    </PhoneLinkProvider>
+    </GuitarLinkProvider>
   )
 }
 

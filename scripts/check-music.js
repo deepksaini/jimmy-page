@@ -10,10 +10,13 @@ import {
   ACOUSTIC_FILES,
   midiOf as fullMidi,
   noteName as fullName,
+  prettyNote,
   SAMPLE_CREDIT,
   sampleFileToToneName,
   STRUM_GAP,
 } from '../src/notes.js'
+import { namesMatch } from '../src/course/match.js'
+import v3Course from '../src/course/lessons.json' with { type: 'json' }
 import { MODULE_1 } from '../src/theory/module1.js'
 import { MODULE_2 } from '../src/theory/module2.js'
 import { MODULE_3 } from '../src/theory/module3.js'
@@ -374,5 +377,35 @@ assert(
   LESSONS.every((item) => item.try.text.includes(PHONE_TRY)),
   'each Module 9 Try step mentions playing on a phone',
 )
+
+assert(prettyNote(fullMidi(6, 0)) === 'E2', 'open low E is E2')
+assert(prettyNote(fullMidi(5, 0)) === 'A2', 'open A is A2')
+assert(prettyNote(fullMidi(4, 0)) === 'D3', 'open D is D3')
+assert(prettyNote(fullMidi(3, 0)) === 'G3', 'open G is G3')
+assert(prettyNote(fullMidi(2, 0)) === 'B3', 'open B is B3')
+assert(prettyNote(fullMidi(1, 0)) === 'E4', 'open high e is E4')
+assert(v3Course.modules.length === 10, 'v3 has 10 modules')
+assert(
+  v3Course.modules.reduce((n, mod) => n + (mod.lessons?.length || 0), 0) === 36,
+  'v3 has 36 lessons',
+)
+
+function walkPositions(value, found = []) {
+  if (!value || typeof value !== 'object') return found
+  if (Number.isInteger(value.string) && Number.isInteger(value.fret)) found.push(value)
+  if (Array.isArray(value)) value.forEach((item) => walkPositions(item, found))
+  else Object.values(value).forEach((item) => walkPositions(item, found))
+  return found
+}
+
+for (const pos of walkPositions(v3Course)) {
+  assert(pos.fret >= 0 && pos.fret <= 12, `fret ${pos.fret} is within 0-12`)
+  if (pos.string && pos.name) {
+    assert(
+      namesMatch(fullName(fullMidi(pos.string, pos.fret)), pos.name),
+      `${pos.stringLetter || pos.string}:${pos.fret} is ${pos.name}`,
+    )
+  }
+}
 
 console.log('music checks passed')

@@ -118,3 +118,10 @@ The phone neck keeps the same 6×13 tap grid. It now has a wood background, vert
 Course copy is “Play on your phone (recommended), or click the fretboard below.” A green or red pulsing dot marks connected vs not. When a phone is connected, the laptop neck is display-only, lights phone notes, and still highlights lesson notes, with “Playing from your phone” above it. When the phone is disconnected, the laptop neck is clickable again.
 
 `npm run check` and `npm run build` passed.
+
+## Course v3 player
+COURSE_V3.md is now the only source of lesson copy, parsed into `src/course/lessons.json`. The Diagnose/Verify engine is replaced by Why → Teach → Examples → Practice → Quiz → Remember, with skip-to-quiz. Lessons use a split layout (50/50 at 1024, 55/45 at 768, stacked below) and a shared vertical guitar in a phone frame. Two-way sync sends targets/clear/result/chordGlow/rhythmTask to the phone and hello/note/rhythmResult back. `npm run check` verifies open strings E2 A2 D3 G3 B3 E4 and that every course position is a real note on frets 0–12. All 10 modules (36 lessons + roadmap) are in this pass.
+
+Tested 375 / 768 / 1280: home lists 36 lessons; 1.1 split shows the phone-frame guitar with glowing teach targets.
+
+`npm run check` and `npm run build` passed.
