@@ -1644,6 +1644,31 @@ button.toc-module:hover .toc-title {
   font-size: 0.95rem;
   color: var(--muted);
 }
+.tempo-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.55rem;
+}
+.tempo-label,
+.tempo-unit {
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+.tempo-picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+.tempo-picks button {
+  min-width: 2.6rem;
+  padding: 0.32rem 0.45rem;
+}
+.tempo-picks button.on {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-color: var(--accent);
+}
 .move-list {
   display: grid;
   gap: 0.4rem;

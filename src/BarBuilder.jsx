@@ -15,7 +15,9 @@ import {
   RHYTHM_CHOICES,
   scoreLesson,
 } from './barBuilder.js'
-import { eventsInOrder } from './music.js'
+import { DEFAULT_BPM, eventsInOrder } from './music.js'
+
+const TEMPOS = [60, 70, 80, 90, 100, 120]
 import { loadV3, patchLesson } from './v3Store.js'
 
 const MOVES = [
@@ -32,10 +34,13 @@ export default function BarBuilder({ lessonId, engine, guitar, onResult }) {
   const [msg, setMsg] = useState('')
   const [result, setResult] = useState(null)
   const [readyToPlay, setReadyToPlay] = useState(false)
+  const [bpm, setBpm] = useState(DEFAULT_BPM)
   const barsRef = useRef(bars)
   const liveRef = useRef(liveBar)
+  const bpmRef = useRef(bpm)
   barsRef.current = bars
   liveRef.current = liveBar
+  bpmRef.current = bpm
 
   const chord = CHORDS[liveBar]
   const current = bars[liveBar] || []
@@ -146,7 +151,7 @@ export default function BarBuilder({ lessonId, engine, guitar, onResult }) {
     }
     const built = ideaMove(idea, kind, chord)
     await engine.unlock()
-    engine.preview(built, 80, 0, (_bar, event) => guitar?.setCursor(event), null, liveBar)
+    engine.preview(built, bpmRef.current, 0, (_bar, event) => guitar?.setCursor(event), null, liveBar)
   }
 
   function applyMove(kind) {
@@ -170,7 +175,7 @@ export default function BarBuilder({ lessonId, engine, guitar, onResult }) {
     const phrase = setup.rhythm ? barsRef.current : evenPhrase(barsRef.current)
     engine.play(
       phrase,
-      80,
+      bpmRef.current,
       0,
       false,
       (_bar, event) => guitar?.setCursor({ string: event.string, fret: event.fret }),
@@ -230,6 +235,25 @@ export default function BarBuilder({ lessonId, engine, guitar, onResult }) {
       <p className="bar-now">
         Bar {liveBar + 1} · {chordLabel(chord)}
       </p>
+      <div className="tempo-row">
+        <span className="tempo-label" id="tempo-label">
+          Tempo
+        </span>
+        <div className="tempo-picks" role="group" aria-labelledby="tempo-label">
+          {TEMPOS.map((value) => (
+            <button
+              key={value}
+              type="button"
+              className={value === bpm ? 'on' : ''}
+              aria-pressed={value === bpm}
+              onClick={() => setBpm(value)}
+            >
+              {value}
+            </button>
+          ))}
+        </div>
+        <span className="tempo-unit">bpm</span>
+      </div>
       <div className="transport">
         <button type="button" className="primary" onClick={hearChord}>
           Hear the chord
