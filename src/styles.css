@@ -1050,6 +1050,17 @@ button.beat {
   gap: 0.4rem;
 }
 
+.course-toc ul {
+  display: grid;
+  gap: 0.65rem;
+  margin: 0;
+  padding-left: 1.15rem;
+}
+
+.course-toc ul li {
+  margin: 0;
+}
+
 .toc-item {
   width: 100%;
   max-width: 100%;
