@@ -19,6 +19,8 @@ export default function PhoneGuitar({ sessionId }) {
     flash: null,
     cursor: null,
     rhythmTask: null,
+    boxMode: false,
+    allowBlue: false,
   })
   const samplerRef = useRef(null)
   const channelRef = useRef(null)
@@ -50,7 +52,19 @@ export default function PhoneGuitar({ sessionId }) {
         rhythmTask: null,
         flash: null,
         currentIndex: 0,
+        boxMode: false,
+        allowBlue: false,
       }))
+    })
+    channel.on('broadcast', { event: 'boxView' }, ({ payload }) => {
+      setView((current) => ({
+        ...current,
+        boxMode: !!payload.boxMode,
+        allowBlue: !!payload.allowBlue,
+      }))
+    })
+    channel.on('broadcast', { event: 'cursor' }, ({ payload }) => {
+      setView((current) => ({ ...current, cursor: payload }))
     })
     channel.on('broadcast', { event: 'result' }, ({ payload }) => {
       setView((current) => {
@@ -164,6 +178,8 @@ export default function PhoneGuitar({ sessionId }) {
           chordGlow={view.chordGlow}
           flash={view.flash}
           cursor={view.cursor}
+          boxMode={view.boxMode}
+          allowBlue={view.allowBlue}
         />
       )}
     </div>

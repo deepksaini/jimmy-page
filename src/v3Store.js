@@ -7,6 +7,8 @@ function emptyLesson() {
     showMe: 0,
     firstTryRight: 0,
     afterFixRight: 0,
+    builderTries: [],
+    practiceOk: false,
   }
 }
 

@@ -125,3 +125,10 @@ COURSE_V3.md is now the only source of lesson copy, parsed into `src/course/less
 Tested 375 / 768 / 1280: home lists 36 lessons; 1.1 split shows the phone-frame guitar with glowing teach targets.
 
 `npm run check` and `npm run build` passed.
+
+## Module 9 bar-by-bar builder
+Lessons 9.1–9.6 share one builder: four bar cards, Hear the chord, box 1 on the phone and the frame (chord notes glow, other box notes normal, outside dimmed), up to four notes with undo/clear, last-note feedback, then Play all four bars over Am–F–G–Am at 80 bpm. Per-lesson goals match COURSE_V3 (passing land, idea moves with preview, rhythm/rest, E♭, five-goal challenge with first try vs later). Spec wording like “Pass:” is stripped from the UI. Play on your phone and the connection status sit once, next to the frame.
+
+Tried a 1970s look (harvest/cream, burnt orange, Palatino, tighter padding, four bar cards across the top). Phone disconnected: laptop neck stays clickable and shows “Phone disconnected.” Phone tab reached Connected after Tap to start.
+
+`npm run check` and `npm run build` passed.

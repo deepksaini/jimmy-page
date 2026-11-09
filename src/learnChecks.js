@@ -163,7 +163,7 @@ export function rhythmSpaceCheck(bars) {
 }
 
 function isBlue(event) {
-  return event.string === 3 && event.fret === 8
+  return (event.string === 3 && event.fret === 8) || (event.string === 5 && event.fret === 6)
 }
 
 export function blueNoteCheck(bars) {
@@ -184,16 +184,19 @@ export function blueNoteCheck(bars) {
       return { ok: false, message: 'Not yet. Every E♭ is followed straight away by E or D.' }
     }
   }
-  return { ok: true, message: 'Pass. E♭ is used as a stepping stone.' }
+  return { ok: true, message: 'E♭ is used as a stepping stone.' }
 }
 
 export function challengeGoals(bars) {
   const items = [
-    { ok: chordEndReport(bars).ok, label: "Every bar ends on a chord note for that bar's chord." },
+    { ok: chordEndReport(bars).ok, label: 'Every bar ends on a chord note for that bar.' },
     { ok: bar4EndsOnA(bars), label: 'Bar 4 ends on A.' },
     { ok: twoBarsShareIdea(bars), label: 'At least two bars share the same idea.' },
     { ok: bars.some((events) => hasInteriorRest(events)), label: 'At least one rest inside a bar.' },
-    { ok: countScaleRuns(bars) <= 1 && bars.some((events) => eventsInOrder(events).length), label: 'At most one scale run.' },
+    {
+      ok: countScaleRuns(bars) <= 1 && bars.some((events) => eventsInOrder(events).length),
+      label: 'At most one scale run (three or more notes stepping through the box in one direction).',
+    },
   ]
   const met = items.filter((item) => item.ok).length
   return { items, met, total: items.length }

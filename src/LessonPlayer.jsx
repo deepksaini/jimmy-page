@@ -2,14 +2,14 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import course from './course/lessons.json'
 import Guitar from './Guitar.jsx'
 import PhoneFrame from './PhoneFrame.jsx'
+import BarBuilder from './BarBuilder.jsx'
+import { stripSpec } from './barBuilder.js'
 import { PlayOnPhoneButton, PhoneStatus, useGuitarLink } from './GuitarLink.jsx'
 import { HomeBack, KindChips } from './board.jsx'
-import { chordNotes } from './voicings.js'
 import { patchLesson } from './v3Store.js'
 import { fixFor, isCorrectTap, remainingAfter } from './playLogic.js'
 import { playedName } from './course/match.js'
-import { CHORDS, moveAnswer, moveChangeRhythm, moveRepeat } from './music.js'
-import { PHONE_HOME } from './phoneLink.js'
+import { CHORDS } from './music.js'
 import { judgeRhythm } from './rhythm.js'
 
 function allLessons() {
@@ -52,8 +52,13 @@ export default function LessonPlayer({ lessonId, engine, onHome, onReport }) {
   const collectedRef = useRef([])
   const screen = screens[page]
   const copy = stepCopy(lesson, screen)
-  const playAction = copy.actions?.find((item) => item.kind === 'play' || item.kind === 'find' || item.kind === 'rhythm' || item.kind === 'improv') || (copy.quiz?.kind === 'play' ? { ...copy.quiz, kind: 'play' } : null)
-  const listenActions = copy.actions?.filter((item) => item.kind !== 'play' && item.kind !== 'find' && item.kind !== 'rhythm' && item.kind !== 'improv') || []
+  const useBuilder = lesson.module.id === 'm9' && (screen.type === 'practice' || screen.type === 'challenge')
+  const playAction = useBuilder
+    ? null
+    : copy.actions?.find((item) => item.kind === 'play' || item.kind === 'find' || item.kind === 'rhythm' || item.kind === 'improv') ||
+      (copy.quiz?.kind === 'play' ? { ...copy.quiz, kind: 'play' } : null)
+  const listenActions =
+    copy.actions?.filter((item) => item.kind !== 'play' && item.kind !== 'find' && item.kind !== 'rhythm' && item.kind !== 'improv') || []
 
   useEffect(() => {
     setNote('')
@@ -66,7 +71,7 @@ export default function LessonPlayer({ lessonId, engine, onHome, onReport }) {
   }, [page, lessonId])
 
   useEffect(() => {
-    if (!guitar) return undefined
+    if (!guitar || useBuilder) return undefined
     if (playAction?.kind === 'play' || (playAction?.kind === 'find' && showMe)) {
       guitar.setTargets({
         positions: playAction.positions || [],
@@ -84,7 +89,7 @@ export default function LessonPlayer({ lessonId, engine, onHome, onReport }) {
       if (string == null) return
       onTap(string, fret, meta)
     })
-  }, [page, lessonId, showMe, playAction?.kind, playAction?.positions?.length])
+  }, [page, lessonId, showMe, playAction?.kind, playAction?.positions?.length, useBuilder])
 
   async function hear(action) {
     await engine.unlock()
@@ -206,7 +211,7 @@ export default function LessonPlayer({ lessonId, engine, onHome, onReport }) {
   const quizIndex = screens.findIndex((item) => item.type === 'quiz')
   const canClick = !guitar?.connected
   const frame = (
-    <PhoneFrame status={<PhoneStatus aboveBoard />}>
+    <PhoneFrame>
       <Guitar
         namesOn={guitar?.view.showNames !== false}
         interactive={canClick}
@@ -217,6 +222,8 @@ export default function LessonPlayer({ lessonId, engine, onHome, onReport }) {
         chordGlow={guitar?.view.chordGlow || []}
         flash={guitar?.view.flash}
         cursor={guitar?.view.cursor}
+        boxMode={guitar?.view.boxMode}
+        allowBlue={guitar?.view.allowBlue}
       />
     </PhoneFrame>
   )
@@ -235,8 +242,8 @@ export default function LessonPlayer({ lessonId, engine, onHome, onReport }) {
           </button>
         ) : null}
         <p className="eyebrow">{copy.title}</p>
-        {copy.text ? <p className="lesson-evidence">{copy.text}</p> : null}
-        {copy.quiz ? <p className="lesson-evidence">{copy.quiz.prompt}</p> : null}
+        {copy.text && !useBuilder ? <p className="lesson-evidence">{stripSpec(copy.text)}</p> : null}
+        {copy.quiz ? <p className="lesson-evidence">{stripSpec(copy.quiz.prompt)}</p> : null}
         {copy.quiz?.kind === 'choose' ? (
           <div className="choices">
             {copy.quiz.options.map((option) => (
@@ -251,10 +258,18 @@ export default function LessonPlayer({ lessonId, engine, onHome, onReport }) {
             Listen
           </button>
         ))}
-        {playAction?.kind === 'play' || playAction?.kind === 'find' || playAction?.kind === 'play' ? (
-          <p className="hint">{PHONE_HOME}</p>
+        {useBuilder ? (
+          <BarBuilder
+            lessonId={lesson.id}
+            engine={engine}
+            guitar={guitar}
+            onResult={(scored) => {
+              setOk(scored.ok)
+              setNote(scored.summary)
+            }}
+          />
         ) : null}
-        {screen.type === 'practice' ? (
+        {screen.type === 'practice' && !useBuilder ? (
           <button
             type="button"
             onClick={() => {
@@ -265,39 +280,12 @@ export default function LessonPlayer({ lessonId, engine, onHome, onReport }) {
             Show me
           </button>
         ) : null}
-        {playAction?.kind === 'improv' && screen.type !== 'challenge' ? (
-          <div className="transport">
-            {['Repeat it', 'Change the rhythm', 'Answer it'].map((label, index) => (
-              <button
-                key={label}
-                type="button"
-                onClick={() => {
-                  const source = bars[0]
-                  let nextBar = source
-                  if (index === 0) nextBar = moveRepeat(source)
-                  if (index === 1) nextBar = moveChangeRhythm(source, 'long-short')
-                  if (index === 2) nextBar = moveAnswer(source, 'Am')
-                  setBars((current) => current.map((bar, barIndex) => (barIndex === liveBar ? nextBar : bar)))
-                }}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
-        ) : null}
-        {lesson.special && screen.type === 'challenge' ? (
-          <ul className="report-list">
-            {lesson.special.goals.map((line) => (
-              <li key={line}>{line}</li>
-            ))}
-          </ul>
-        ) : null}
-        {note ? <p className={ok ? 'check-ok' : 'check-note'}>{note}</p> : null}
+        {note && !useBuilder ? <p className={ok ? 'check-ok' : 'check-note'}>{note}</p> : null}
         <div className="player-nav">
           <button type="button" onClick={() => setPage(Math.max(0, page - 1))} disabled={page === 0}>
             Back
           </button>
-          <button type="button" className="primary" onClick={next} disabled={!!copy.quiz && !ok}>
+          <button type="button" className="primary" onClick={next} disabled={(!!copy.quiz || useBuilder) && !ok}>
             {page === screens.length - 1 ? 'Done' : 'Next'}
           </button>
         </div>
@@ -306,7 +294,10 @@ export default function LessonPlayer({ lessonId, engine, onHome, onReport }) {
         </p>
       </section>
       <aside className="v3-guitar">
-        <PlayOnPhoneButton className="primary play-phone" />
+        <div className="phone-aside-head">
+          <PlayOnPhoneButton className="primary play-phone" />
+          <PhoneStatus />
+        </div>
         {frame}
       </aside>
     </div>

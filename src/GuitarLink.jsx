@@ -19,6 +19,8 @@ const emptyView = {
   rhythmTask: null,
   flash: null,
   cursor: null,
+  boxMode: false,
+  allowBlue: false,
 }
 
 export function GuitarLinkProvider({ children }) {
@@ -57,16 +59,20 @@ export function GuitarLinkProvider({ children }) {
 
   const setTargets = useCallback(
     (payload) => {
-      const next = {
-        targets: payload.positions || [],
-        mode: payload.mode || 'sequence',
-        showNames: payload.showNames !== false,
-        currentIndex: 0,
-        chordGlow: [],
-        rhythmTask: null,
-        flash: null,
-      }
-      setView((current) => ({ ...current, ...next }))
+      setView((current) => {
+        const next = {
+          targets: payload.positions || [],
+          mode: payload.mode || 'sequence',
+          showNames: payload.showNames !== false,
+          currentIndex: 0,
+          chordGlow: [],
+          rhythmTask: null,
+          flash: null,
+          boxMode: current.boxMode,
+          allowBlue: current.allowBlue,
+        }
+        return { ...current, ...next }
+      })
       send('targets', payload)
     },
     [send],
@@ -105,6 +111,24 @@ export function GuitarLinkProvider({ children }) {
     (task) => {
       setView((current) => ({ ...current, rhythmTask: task }))
       send('rhythmTask', task)
+    },
+    [send],
+  )
+
+  const setBoxView = useCallback(
+    (payload) => {
+      const boxMode = !!payload?.boxMode
+      const allowBlue = !!payload?.allowBlue
+      setView((current) => ({ ...current, boxMode, allowBlue }))
+      send('boxView', { boxMode, allowBlue })
+    },
+    [send],
+  )
+
+  const setCursor = useCallback(
+    (note) => {
+      setView((current) => ({ ...current, cursor: note }))
+      send('cursor', note)
     },
     [send],
   )
@@ -176,6 +200,8 @@ export function GuitarLinkProvider({ children }) {
     sendResult,
     setChordGlow,
     setRhythmTask,
+    setBoxView,
+    setCursor,
     registerTap,
     handleNote,
     send,
@@ -197,7 +223,6 @@ export function GuitarLinkProvider({ children }) {
             <p className="lesson-evidence">Scan this code. Your phone becomes the guitar and stays in sync with this screen.</p>
             {qrSrc ? <img className="phone-qr" src={qrSrc} alt="QR code to open this course on your phone" /> : <p>Making the code…</p>}
             <p className="hint">{value.link}</p>
-            <PhoneStatus />
             <button type="button" className="primary" onClick={() => setModalOpen(false)}>
               Close
             </button>

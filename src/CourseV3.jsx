@@ -2,8 +2,6 @@ import { useMemo, useState } from 'react'
 import course from './course/lessons.json'
 import LessonPlayer from './LessonPlayer.jsx'
 import { HomeBack } from './board.jsx'
-import { PlayOnPhoneButton } from './GuitarLink.jsx'
-import { PHONE_HOME } from './phoneLink.js'
 import { loadV3, saveV3 } from './v3Store.js'
 
 function reportFor(mod, lessonsState) {
@@ -135,10 +133,6 @@ export default function CourseV3({ engine }) {
       <h1>Jimmy Page</h1>
       <p className="lede">{course.goal}</p>
       <p className="lesson-evidence">{course.who}</p>
-      <p className="lesson-evidence">{PHONE_HOME}</p>
-      <div className="phone-cta">
-        <PlayOnPhoneButton className="primary play-phone" />
-      </div>
       <div className="progress-block">
         <p className="progress-label">
           {done} of {lessons.length} lessons done

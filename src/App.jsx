@@ -5,7 +5,7 @@ import { applyTheme, loadTheme } from './theme.js'
 import { clearLearn } from './learnStore.js'
 import { clearTheory } from './theoryStore.js'
 import { clearV3 } from './v3Store.js'
-import { GuitarLinkProvider, PhoneStatus, PlayOnPhoneButton } from './GuitarLink.jsx'
+import { GuitarLinkProvider } from './GuitarLink.jsx'
 import PhoneGuitar from './PhoneGuitar.jsx'
 import { readPhoneSession } from './phoneLink.js'
 import CourseV3 from './CourseV3.jsx'
@@ -75,10 +75,8 @@ function CourseApp() {
           <button type="button" className="ghost restart" onClick={restartSession}>
             Restart session
           </button>
-          <PlayOnPhoneButton />
           <ThemeSwitch theme={theme} onTheme={(next) => setTheme(applyTheme(next))} />
         </div>
-        <PhoneStatus />
         <CourseV3 key={session} engine={engine} />
       </div>
     </GuitarLinkProvider>

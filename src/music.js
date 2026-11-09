@@ -329,7 +329,7 @@ function roomFrom(used, start, wanted) {
   return room
 }
 
-function mapNotesToRhythm(source, pattern) {
+export function mapNotesToRhythm(source, pattern) {
   const notes = eventsInOrder(source)
   if (!notes.length) return []
   const used = new Set()

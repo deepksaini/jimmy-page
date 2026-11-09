@@ -68,6 +68,14 @@ import {
   spreadNotes,
   withDistinctRhythm,
 } from '../src/music.js'
+import {
+  BOX1,
+  endBarFeedback,
+  inBox1,
+  LESSON_SETUP,
+  scoreLesson,
+  stripSpec,
+} from '../src/barBuilder.js'
 
 function assert(cond, msg) {
   if (!cond) throw new Error(msg)
@@ -407,5 +415,28 @@ for (const pos of walkPositions(v3Course)) {
     )
   }
 }
+
+assert(BOX1.length === 12, 'box 1 has 12 pentatonic notes')
+assert(inBox1(6, 5) && inBox1(1, 8) && !inBox1(6, 3), 'box 1 is frets 5-8 shape')
+assert(inBox1(5, 6, true) && !inBox1(5, 6, false), 'E♭ on A:6 is optional')
+assert(inBox1(3, 8, true) && !inBox1(3, 8, false), 'E♭ on G:8 is optional')
+assert(LESSON_SETUP['9.1'].goal === 'End each bar on a glowing note.', '9.1 goal copy')
+assert(!stripSpec('Play along. Pass: last note is a chord note.').includes('Pass:'), 'Pass: is stripped from UI copy')
+
+const fLanding = [{ string: 1, fret: 8, startSlot: 0, lengthSlots: 2 }]
+const fMiss = [{ string: 5, fret: 5, startSlot: 0, lengthSlots: 2 }]
+assert(endBarFeedback(fLanding, 'F').ok && endBarFeedback(fLanding, 'F').text.includes('a note of F'), 'ends on C of F')
+assert(!endBarFeedback(fMiss, 'F').ok, 'D is not in F')
+assert(endBarFeedback(fMiss, 'F').text.includes("isn't in F"), 'miss copy names F')
+assert(endBarFeedback(fMiss, 'F').text.includes('Try A or C'), 'miss copy offers A or C')
+
+const good91 = [
+  [{ string: 1, fret: 5, startSlot: 0, lengthSlots: 2 }],
+  [{ string: 1, fret: 8, startSlot: 0, lengthSlots: 2 }],
+  [{ string: 5, fret: 5, startSlot: 0, lengthSlots: 2 }],
+  [{ string: 1, fret: 5, startSlot: 0, lengthSlots: 2 }],
+]
+assert(scoreLesson('9.1', good91).ok && scoreLesson('9.1', good91).endsOnChord === 4, '9.1 all bars land')
+assert(!scoreLesson('9.1', [fMiss, fMiss, fMiss, fMiss]).ok, '9.1 fails without chord ends')
 
 console.log('music checks passed')
